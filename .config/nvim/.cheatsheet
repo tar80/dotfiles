@@ -1,0 +1,82 @@
+# G
+
+範囲選択してg+<C-a>で連番
+g<Ctrl+g> ファイル情報
+g; 前の履歴
+g, 次の履歴
+ga (:as[cii]) カーソル位置文字情報
+gi 最後にインサートモードに入った位置へ移動
+gw{motion} 行整形
+gx URIを開く
+gl. lsp
+gs. git signs
+
+# oparetor
+if,af function-block
+i%,a% any-block
+
+# quickfix
+cdo リストに対してコマンドを実行
+
+# abbrev-command
+shadad !rm main.shada.tmp*
+es open file encode cp932
+eu open file encode utf16
+e8 open file encode utf8
+sc set<Space>scb<Space><Bar><Space>wincmd<Space>p<Space><Bar><Space>set<Space>scb
+scn set<Space>noscb
+del delete "%"
+dd diff
+dof diff off
+dor difforg
+ht hitest
+ct colortest
+bt deno task build
+bp npm run build:prod
+
+# normal
+]<Space> 次の行に空白を開ける
+[<Space> 前の行に空白を開ける
+]p インデントを考慮して張り付け
+zy ブロック選択時に行末空白を無視
+zp ブロック張り付け時に行末空白を無視
+_  "* + operator-replace
+<C-w>
+  i 識別子の宣言位置を開く
+  o 他のペインを削除
+  ] タグを開く
+  r ペイン位置をずらす
+<Space>/ 正規表現履歴絞り込み
+
+# insert
+<C-g>u undo区切り
+<C-r><C-o>{register} 矩形を崩さず貼り付け
+<C-r><C-w> カーソル下単語
+0<C-d> 字下げ削除
+^<C-d> 字下げ削除 改行の字下げ維持
+
+# cmdline
+:Z <query> zoxide query
+:messages
+:vnew 新規縦開き
+:g/^/m0 reverse lines
+:v/str/d 含まない行を削除
+:argadd <file> バッファに追加
+:tabc タブページ閉じる
+:tab help  新規タブで開く
+:helpg     検索してヘルプ
+
+# fold
+zf 作成
+zR 全開き
+zM 全閉じ
+zn フォルド無効
+zN フォルド有効
+zj 次の折畳
+zk 前の折畳
+[z 折畳の開始点
+]z 折畳の終点
+
+#spell
+zg good単語登録
+zw wrong単語登録

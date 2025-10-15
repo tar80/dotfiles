@@ -1,0 +1,4 @@
+node_modules/
+lua/config/private.lua
+lazy-lock.json
+package-lock.json

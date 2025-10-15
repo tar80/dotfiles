@@ -1,0 +1,60 @@
+{
+  "If": {
+    "prefix": "if",
+    "body": [
+      "if $1",
+      "\t$2",
+      "endif",
+      "\n$0"
+    ]
+  },
+  "For": {
+    "prefix": "for",
+    "body": [
+      "for $1 $2 $3",
+      "\t$4",
+      "endfor",
+      "\n$0"
+    ]
+  },
+  "Function": {
+    "prefix": "func",
+    "body": [
+      "function! s:$1($2) abort \"{{{2",
+      "\t$3",
+      "endfunction \"}}}2",
+      "\n$0"
+    ]
+  },
+  "Object": {
+    "prefix": "obj",
+    "body": [
+    "{",
+    "\t\\ '$1': $2",
+    "\t\\ }"
+    ]
+  },
+  "Object inline": {
+    "prefix": "obji",
+    "body": [
+    "'$1',",
+    "\\ '$2': $3"
+    ]
+  },
+  "Array": {
+    "prefix": "arr",
+    "body": [
+    "[",
+    "\t\\ ['$1', $2",
+    "\t\\ ]"
+    ]
+  },
+  "Array inline": {
+    "prefix": "obja",
+    "body": [
+    "'$1'],",
+    "\\ ['$2', $3"
+    ]
+  }
+}
+

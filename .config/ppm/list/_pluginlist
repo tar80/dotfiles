@@ -1,0 +1,42 @@
+﻿;plugin repositories list
+;-------------------------------------------------------------------------------
+
+;local 'D:\Dev\tar80\ppm-gitmode'
+local 'D:\Dev\ppmdev\packages\parsonal'
+local 'D:\Dev\ppmdev\packages\ppm-adjacentdir'
+local 'D:\Dev\ppmdev\packages\ppm-comment'
+local 'D:\Dev\ppmdev\packages\ppm-comppath'
+local 'D:\Dev\ppmdev\packages\ppm-edit'
+local 'D:\Dev\ppmdev\packages\ppm-etp'
+local 'D:\Dev\ppmdev\packages\ppm-fileoperation'
+local 'D:\Dev\ppmdev\packages\ppm-grep'
+;local 'D:\Dev\ppmdev\packages\ppm-iconicfont'
+local 'D:\Dev\ppmdev\packages\ppm-listfile'
+local 'D:\Dev\ppmdev\packages\ppm-misc'
+local 'D:\Dev\ppmdev\packages\ppm-rclone'
+local 'D:\Dev\ppmdev\packages\ppm-switchmenu'
+local 'D:\Dev\ppmdev\packages\ppm-test'
+;local 'D:\Dev\ppmdev\packages\ppm-theme'
+local 'D:\Dev\ppmdev\packages\ppm-translate'
+local 'D:\Dev\ppmdev\packages\ppm-view'
+local 'D:\Dev\ppmdev\packages\ppm-vilikekeys'
+
+;-------------------------------------------------------------------------------
+;#仕様
+; - 行頭にremote|localがある行を読み込みます
+; - コメントはセミコロン(;)を使います
+;   行内の空白+セミコロン( ;)以降はコメント扱いになります
+; - ブランチ・コミットを指定できます
+;   両方指定したときはコミットが優先されます
+;   *ppmInstall時に実行され、ppm以外からの変更には追従しません
+;
+; ex)remote <plugin-name> [{branch: <branch-name>, commit: <commit-hash>}]
+; 	github上で公開されているプラグインのurl該当箇所
+; 	一行に一つのパスを書く
+; ex)local <plugin-name> [{branch: <branch-name>, commit: <commit-hash>}]
+; 	ppmのプラグインファイルで構成されたローカルリポジトリのパス
+; 	一行に一つのパスを書く
+;
+; ex)remote 'username/plugin-name'
+; ex)remote 'username/plugin-name' {branch: 'dev', commit: 'ABC1234'}
+; ex)local  'path\to\repository' ;{branch: 'feat'}

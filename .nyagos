@@ -1,0 +1,328 @@
+---@desc constants
+local THEME_NAME = 'Catppuccin Macchiato'
+local REPO_ROOT = 'D:/Repos'
+local MY_REPO = string.format('%s/tar80', REPO_ROOT)
+local SCOOP_ROOT = nyagos.env.scoop:gsub('\\', '/')
+
+local notify = function(msg)
+  print(string.format('\027[49;33m %s\027[49;49m', msg))
+end
+
+local detect_marker = function(path, marker)
+  repeat
+    if nyagos.access(nyagos.pathjoin(path, marker), 0) then
+      break
+    end
+    path = path:match('^(.+)\\')
+  until not path
+
+  if not path then
+    return false, ''
+  end
+
+  return true, path
+end
+
+local package_version = function()
+  local ok, path = detect_marker(nyagos.getwd(), 'package.json')
+
+  if ok then
+    local version = nyagos.eval(string.format('cat %s\\package.json| jq -r ".version"', path))
+
+    if version ~= 'null' then
+      return string.format('$E[49;34mv%s ', version)
+    end
+  end
+
+  return ''
+end
+
+local branch_info = function()
+  local ok, path = detect_marker(nyagos.getwd(), '.git')
+
+  if not ok then
+    return false, path, {}
+  end
+
+  local status = nyagos.eval('git -c core.quotepath status -b --porcelain')
+  local lines = {}
+
+  for line in status:gmatch('[^\n]+') do
+    table.insert(lines, line)
+  end
+
+  local branchname = lines[1]:gsub('##%s([^\\.]+).*', '%1')
+  local staged, unstaged, conflicted = 0, 0, 0
+
+  for i = 2, #lines do
+    if lines[i]:find('UU') then
+      conflicted = conflicted + 1
+    end
+    if lines[i]:sub(1, 1):find('[MADRC]') then
+      staged = staged + 1
+    end
+    if lines[i]:sub(2, 2):find('[^%s!]') then
+      unstaged = unstaged + 1
+    end
+  end
+
+  return true, path, { name = branchname, s = staged, u = unstaged, c = conflicted }
+end
+
+local adjust_wd = function(path)
+  local wd = nyagos.getwd()
+
+  if wd:len() <= 40 then
+    return '$P'
+  end
+
+  return wd:sub(nyagos.dirname(path):len() + 2):gsub('\\', '/')
+end
+
+---@desc prompt
+do
+  -- cmd
+  nyagos.env.PROMPT = '$P$S'
+  -- nyagos
+  local prompt = nyagos.default_prompt
+  nyagos.prompt = function()
+    local ok, path, branch = branch_info()
+    local title = 'NYAGOS - ' .. nyagos.getwd()
+    local date = os.date('%H:%M:%S')
+    local statusline = '$E[0m$E[49;36m %s %s$E[92m%s$_$E[0m'
+    local nonrepo = '$E[49;49m'
+    local repo = '$E[49;90m$E[100;93m  %s +%s ~%s !%s$E[49;90m '
+    local stats = ok and string.format(repo, branch.name, branch.s, branch.u, branch.c) or nonrepo
+
+    return prompt(string.format(statusline, adjust_wd(path), stats, date), title)
+  end
+end
+
+local scoop_app = function(name)
+  return string.format('%s/apps/%s/current/%s.exe', SCOOP_ROOT, name, name)
+end
+
+local FZF = scoop_app('fzf')
+local BAT = scoop_app('bat')
+local DELTA = scoop_app('delta')
+
+---@desc options
+nyagos.option.completion_slash = true
+nyagos.option.predict = true
+nyagos.histsize = 200
+nyagos.completion_hook = function(c)
+  for index, item in ipairs(c.list) do
+    c.shownlist[index] = string.format('\027[49;39m%s\027[49;93m%s', c.word, item:sub(string.len(c.word) + 1))
+  end
+  return c.list, c.shownlist
+end
+
+---@desc environments
+-- nyagos.envadd('PATH', string.format('%s/apps/git/current/usr/bin', SCOOP_ROOT))
+nyagos.env.LESSCHARSET = 'utf-8'
+local bat_cmdline =
+  string.format('%s --color=always --style=numbers,changes --line-range=:50 --theme=""%s""', BAT, THEME_NAME)
+local fzf_opts = {
+  '--border=rounded',
+  '--info=inline-right',
+  '--exit-0',
+  '--reverse',
+  '--margin=0,1',
+  '--height 80%',
+  '--preview-window=border-rounded,60%',
+  '--bind ctrl-f:page-down,ctrl-b:page-up',
+  '--bind ctrl-d:preview-page-down,ctrl-u:preview-page-up',
+  '--color=fg:-1,bg:-1,hl:#FFCC00',
+  '--color=fg+:#4D84A8,bg+:-1,hl+:#00EAFF',
+  '--color=info:#AA82FA,prompt:#2CDEDE,pointer:#6BFF26',
+  '--color=marker:#C06EFF,spinner:#A357FF,header:#A7D1D1',
+}
+nyagos.env.FZF_DEFAULT_OPTS = table.concat(fzf_opts, ' ')
+nyagos.env.FZF_DEFAULT_COMMAND = 'fd -HL -c never --exclude ".git" .'
+nyagos.env._ZO_FZF_OPTS = (function(opts)
+  table.insert(opts, string.format('--preview="%s "{2..}/readme.md""', bat_cmdline))
+  return table.concat(opts, ' ')
+end)(fzf_opts)
+
+local fzf = { cmd = FZF }
+setmetatable(fzf, {
+  __index = {
+    gitlog = function(self)
+      return string.format('%s --preview="git show --color {1}"', self.cmd)
+    end,
+    gitdiff = function(self)
+      return string.format('%s --preview="git diff {2}|delta"', self.cmd)
+    end,
+    gitgrep = function(self, word)
+      return string.format('%s --preview="git grep -iIw "%s" {1}"', self.cmd, word)
+    end,
+    bat = function(self)
+      return string.format('%s --preview="%s "{}""', self.cmd, bat_cmdline)
+    end,
+  },
+})
+
+---@desc alias
+nyagos.alias.__dump_history = function()
+  local uniq = {}
+  for i = nyagos.gethistory() - 1, 1, -1 do
+    local line = nyagos.gethistory(i)
+    if line ~= '' and not uniq[line] then
+      print(line)
+      uniq[line] = true
+    end
+  end
+end
+
+nyagos.alias.pca = string.format([[cd %s/pages-pca && bundle exec jekyll s --future]], MY_REPO)
+nyagos.alias.lazyinstall = [[nvim --headless "+silent! Lazy! install" +qa]]
+nyagos.alias.nvim = [[nvim --cmd "let g:start_level='trans'"]]
+nyagos.alias.nvimtest = [[nvim --cmd "let g:start_level='test'"]]
+nyagos.alias.nvimmini = [[nvim --cmd "let g:start_level='minimal'"]]
+nyagos.alias.nvimstable = [[D:/Scoop/apps/neovim/current/bin/nvim.exe --cmd "let g:start_level='trans'"]]
+
+nyagos.alias['..'] = 'cd ../'
+nyagos.alias.cp = 'cp -i'
+nyagos.alias.mv = 'mv -i'
+-- nyagos.alias.rm = 'rm -i'
+nyagos.alias.zi = function()
+  local path = nyagos.eval('zoxide query -i')
+  if path ~= '' then
+    nyagos.exec(string.format('cd "%s"', path))
+    nyagos.exec(string.format('zoxide add %s', path))
+  end
+  return nil
+end
+
+nyagos.alias.z = function(arg)
+  local path = nyagos.eval(string.format('zoxide query %s', arg[1]))
+  if path ~= '' then
+    nyagos.exec(string.format('cd "%s"', path))
+    nyagos.exec(string.format('zoxide add %s', path))
+  end
+  return nil
+end
+
+nyagos.alias.bb = function()
+  local path = nyagos.eval(string.format('fd -IHt f -c never -E .git -E node_modules|%s', fzf:bat()))
+  if path ~= '' then
+    nyagos.exec(string.format('%s --style=numbers,changes --theme="%s" "%s"', BAT, THEME_NAME, path))
+  end
+end
+
+nyagos.alias.cc = function()
+  local path = nyagos.eval(string.format('fd -IH -d 5 -t dir -c never -E node_modules -E .git|%s', fzf.cmd))
+  if path ~= '' then
+    nyagos.exec(string.format('cd %s', path))
+  end
+end
+
+nyagos.alias.ppm = function()
+  local repo = string.format('%s/ppmdev', REPO_ROOT)
+  local path = nyagos.eval(string.format('fd -ILt d -c never -E node_modules -E .git --full-path . %s|%s', repo, fzf.cmd))
+  if path ~= '' then
+    nyagos.exec(string.format('cd %s', path))
+    nyagos.exec(string.format('zoxide add %s', path))
+  end
+end
+
+nyagos.alias.tar = function()
+  local repo = string.format('%s/tar80', REPO_ROOT)
+  local path = nyagos.eval(string.format('fd -Lt d -c never -E node_modules -E .git --full-path . %s|%s', repo, fzf.cmd))
+  if path ~= '' then
+    nyagos.exec(string.format('cd %s', path))
+    nyagos.exec(string.format('zoxide add %s', path))
+  end
+end
+
+-- nyagos.alias.ll = 'lsd -l --group-dirs first --blocks permission --blocks size --blocks date --blocks name'
+nyagos.alias.ll =
+  'lsd -1lgXA --blocks=permission,size,date,name --group-dirs=first --size=bytes --date="+%Y-%m-%d %H:%M" -I=.git -I=node_modules -I=.bundle -I=_site'
+nyagos.alias.lt =
+  'lsd -1lgXA --tree --blocks=permission,size,date,name --group-dirs=first --size=bytes --date="+%Y-%m-%d %H:%M" -I=.git -I=node_modules -I=.bundle -I=_site -I=themes'
+
+nyagos.alias.gd = function()
+  local stdout = nyagos.eval(string.format('git status -s -uall|%s', fzf:gitdiff()))
+  if not (stdout == '' or stdout:find('^fatal:')) then
+    nyagos.exec(string.format('git diff %s|%s -s', stdout:sub(3), DELTA))
+  end
+end
+
+nyagos.alias.g = function(arg)
+  if not arg[1] then
+    notify('Search string required')
+  else
+    local result = nyagos.eval(string.format('git log --oneline -G "%s"|%s', arg[1], fzf:gitgrep(arg[1])))
+    local hash = string.match(result, '^%S+')
+    return hash and nyagos.exec(string.format('git diff %s|%s -s', hash, DELTA))
+  end
+end
+
+nyagos.alias.gl = function()
+  local result = nyagos.eval(string.format('git log --oneline|%s', fzf:gitlog()))
+  local hash = string.match(result, '^%S+')
+  return hash and nyagos.exec(string.format('git show %s|%s -s', hash, DELTA))
+end
+
+nyagos.alias.gs = function()
+  return nyagos.exec(string.format('git show|%s -s', DELTA))
+end
+
+nyagos.alias.ns = function()
+  local ok, path = detect_marker(nyagos.getwd(), 'package.json')
+  if ok then
+    path = string.format('%s/package.json', path)
+    local cmd = string.format('cat %s|jq -r ".scripts|to_entries|.[]|.key + \\"   \\" + .value"|%s', path, fzf.cmd)
+    local stdout = nyagos.eval(cmd)
+    return stdout ~= '' and nyagos.exec(string.format('npm run %s', stdout:sub(1, stdout:find('%s'))))
+  else
+    notify('Not exist package.json')
+  end
+end
+
+nyagos.alias.nsp = function(arg)
+  if not arg[1] then
+    notify('Argument required')
+  else
+    nyagos.exec(string.format('npm run packadd -name=%s', arg[1]))
+  end
+end
+
+---@desc keybinds
+-- nyagos.key['F1'] = function()
+--   nyagos.rawexec('c:/bin/cltc/cltc.exe')
+-- end
+
+nyagos.key['F9'] = function()
+  nyagos.exec('nvim %home%/.nyagos')
+  -- nyagos.exec(string.format('nvim %s/.nyagos', MY_REPO))
+end
+
+nyagos.bindkey('C_R', function()
+  local select = nyagos.eval(string.format('__dump_history|%s', fzf.cmd))
+  return select
+end)
+
+nyagos.bindkey('M_H', function(this)
+  local cmd = string.format('cd --history|%s', fzf.cmd)
+  this:call('REPAINT_ON_NEWLINE')
+  return string.format('"%s"', nyagos.eval(cmd))
+end)
+
+nyagos.bindkey('M_G', function()
+  local result = nyagos.eval(string.format('git log --pretty="format:%h %s"|', fzf:gitlog()))
+  return string.match(result, '^%S+') or ''
+end)
+
+-- nyagos.skk{
+--     user="c:/bin/home/.skk_nyagos",
+--     "c:/bin/home/.skk/SKK-JISYO.L",
+--     "c:/bin/home/.skk/SKK-JISYO.emoji",
+--     export="GOREADLINESKK",
+-- }
+
+require('sq2dq')
+require('git')
+require('subcomplete')
+
+-- vim: set ft=lua:

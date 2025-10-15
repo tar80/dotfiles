@@ -1,0 +1,24 @@
+{
+  "Mode line": {
+    "prefix": "ml",
+    "body": "-- vim:textwidth=0:foldmethod=marker:foldlevel=1:\n"
+  },
+  "Ternary operator": {
+    "prefix": "to",
+    "body": "$1 and $2 or $3"
+  },
+  "Busted describe": {
+    "prefix": "desc",
+    "body": ["describe(\"$1\", function()", "\tit(\"$2\", function()", "\t\t$3", "\tend)", "end)"]
+  },
+  "Busted it": {
+    "prefix": "it",
+    "body": ["it('$1', function()", "\t$2", "end)"]
+  },
+  "Print": {
+    "prefix": {
+      "prefix": "pr",
+      "body": "vim.print(string.format('$1:%s$2',$3))"
+    }
+  }
+}

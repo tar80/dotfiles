@@ -1,0 +1,38 @@
+{
+  "URL link": {
+    "prefix": "url",
+    "body": [
+        "[$1]($2)$0"
+    ]
+  },
+  "IMG link": {
+    "prefix": "img",
+    "body": [
+        "![$1]($2)$0"
+    ]
+  },
+  "Pages URL link": {
+    "prefix": "siteu",
+    "body": [
+        "[$1]({{ site.baseurl }}{% post_url $2 %})\n$0"
+    ]
+  },
+  "Pages IMG link": {
+    "prefix": "sitei",
+    "body": [
+        "![sample]({{ site.baseurl }}{% link /public/img/$1 %})\n$0"
+    ]
+  },
+  "ppm plugin link": {
+    "prefix": "ppm",
+    "body": [
+        "[$1](https://github.com/tar80/$1) $0"
+    ]
+  },
+  "list": {
+    "prefix": "list",
+    "body": [
+      "| ${1:key} | ${2:command} |\n|:-|:-|\n| $3 | $0 |"
+    ]
+  }
+}

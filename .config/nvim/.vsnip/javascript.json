@@ -1,0 +1,244 @@
+{
+  "Template": {
+    "prefix": "temp",
+    "body": [
+      "//!*script",
+      "/*!",
+      " * ${1:discription}",
+      " *",
+      " * @arg {$2} $3",
+      " * @return {$4} $5",
+      " */",
+      "\n${6:'use strict';}"
+    ]
+  },
+  "Import modules CV8": {
+    "prefix": "impv",
+    "body": [
+      "const NL_CHAR = '\\r\\n';",
+      "",
+      "/* Import modules */",
+      "import * as util from '../../module/clearscript/util.mjs';",
+      "import {error} from '../../module/clearscript/errors.mjs';",
+      "import {$1} from '../../module/clearscript/lib.mjs';",
+      "import {$2} from '../../module/clearscript/ppm.mjs';",
+      "$0"
+    ]
+  },
+  "Import modules chakra": {
+    "prefix": "impe",
+    "body": [
+      "/* Import modules */",
+      "/** @type {!any} */",
+      "const st = PPx.CreateObject('ADODB.stream');",
+      "//@ts-ignore",
+      "let module = function (filepath) {",
+      "\tst.Open;",
+      "\tst.Type = 2;",
+      "\tst.Charset = 'UTF-8';",
+      "\tst.LoadFromFile(filepath);",
+      "\tconst data = st.ReadText(-1);",
+      "\tst.Close;",
+      "",
+      "\treturn Function(' return ' + data)();",
+      "};",
+      "",
+      "const util = module(PPx.Extract('%*getcust(S_ppm#global:module)\\\\\\\\util.js'));",
+      "//@ts-ignore",
+      "module = null;"
+    ]
+  },
+  "Import modules": {
+    "prefix": "impj",
+    "body": [
+      "/* Import modules */",
+      "/** @type {!any} */",
+      "var st = PPx.CreateObject('ADODB.stream');",
+      "//@ts-ignore",
+      "var module = function (filepath) {",
+      "\tst.Open;",
+      "\tst.Type = 2;",
+      "\tst.Charset = 'UTF-8';",
+      "\tst.LoadFromFile(filepath);",
+      "\tvar data = st.ReadText(-1);",
+      "\tst.Close;",
+      "",
+      "\treturn Function(' return ' + data)();",
+      "};",
+      "var util = module(PPx.Extract('%*getcust(S_ppm#global:module)\\\\\\\\util.js'));",
+      "//@ts-ignore",
+      "module = null;"
+    ]
+  },
+  "Annotation": {
+    "prefix": "pa",
+    "body": " * @${1:param} {$2} $0"
+  },
+  "Type annotation": {
+    "prefix": "an",
+    "body": "/** @${1:type} {${2:string}} $0*/"
+  },
+  "Ts check": {
+    "prefix": "tsc",
+    "body": "//@ts-check"
+  },
+  "Ts ignore": {
+    "prefix": "tsi",
+    "body": "//@ts-ignore"
+  },
+  "Comment": {
+    "prefix": "come",
+    "body": "/**\n * $1\n */"
+  },
+  "FileSystemObject": {
+    "prefix": "fs",
+    "body": "${1:const} fs = PPx.CreateObject('Scripting.FileSystemObject');\n$0"
+  },
+  "Object inline": {
+    "prefix": "obji",
+    "body": "'$1': '$2',\n$0"
+  },
+  "Object arrow function": {
+    "prefix": "objaf",
+    "body": "$1('$2') $3,\n$0"
+  },
+  "Object function": {
+    "prefix": "objf",
+    "body": "'$1': function ('$2') {$3},\n$0"
+  },
+  "Await import": {
+    "prefix": "impa",
+    "body": "const $1 = await import($0$1.mjs)"
+  },
+  "Await import bracket": {
+    "prefix": "impab",
+    "body": "const {$1} = await import($0$1.mjs)"
+  },
+  "If": {
+    "prefix": "if",
+    "body": "if ($1) {\n\t$2\n}$3\n$0"
+  },
+  "For loop": {
+    "prefix": "for",
+    "body": ["for (let ${1:i} = ${2:0}; ${1:i} < ${3:k}; ${1:i}++) {", "\t$4", "}", "\n$0"]
+  },
+  "For loop limit": {
+    "prefix": "forl",
+    "body": [
+      "for (let ${1:i} = ${2:0}, ${3:k} = ${4:array}.length; ${1:i} < ${3}; ${1:i}++) {",
+      "\tconst ${5:element} = ${4:array}[${1:i}];",
+      "\t$0",
+      "}"
+    ]
+  },
+  "For loop var": {
+    "prefix": "forj",
+    "body": ["for (var ${1:i} = 0; ${1:i} < ${2:k}; ${1:i}++) {", "\t$3", "}", "\n$0"]
+  },
+  "For loop var limit": {
+    "prefix": "forjl",
+    "body": [
+      "for (var ${1:i} = ${2:0}, ${3:k} = ${4:array}.length; ${1:i} < ${3:l}; ${1:i}++) {",
+      "\tvar ${5:element} = ${4:array}[${1:i}];",
+      "\t$0",
+      "}"
+    ]
+  },
+  "For in": {
+    "prefix": "forin",
+    "body": [
+      "for (var ${1:item} in ${2:items}) {",
+      "\tif (Object.prototype.hasOwnProperty.call(${2:items}, ${1:item})) {",
+      "\t\tif (${2:items}[${1:item}]$3) {\n\t\t\t$4\n\t\t}",
+      "\n\t}\n}"
+    ]
+  },
+  "For of": {
+    "prefix": "forof",
+    "body": "for (const ${1:item} of ${1}s${2}) {\n\t$0\n}"
+  },
+  "Arrow function": {
+    "prefix": "af",
+    "body": "($1) => $2"
+  },
+  "Anonymous arrow function": {
+    "prefix": "afn",
+    "body": "(($1) => $2)()"
+  },
+  "Function": {
+    "prefix": "func",
+    "body": "function ($1) {$2}"
+  },
+  "Anonymous function": {
+    "prefix": "funcn",
+    "body": "(function ($1) {$2})()"
+  },
+  "Do loop": {
+    "prefix": "do",
+    "body": "do{\n\t$1\n} while($0);"
+  },
+  "Getcust S_ppm#": {
+    "prefix": "getppm",
+    "body": "%*getcust(S_ppm#${1:global}:$2)"
+  },
+  "Util.getc": {
+    "prefix": "uget",
+    "body": "util.getc($1)"
+  },
+  "Util.setc": {
+    "prefix": "uset",
+    "body": "util.setc($1)"
+  },
+  "UnitTest describe": {
+    "prefix": "desc",
+    "body": ["describe('$1', function () {", "\t$2", "});"]
+  },
+  "UnitTest it": {
+    "prefix": "it",
+    "body": ["it('$1', function () {", "\t$2", "});"]
+  },
+  "PPx arguments ECMA": {
+    "prefix": "arr",
+    "body": [
+      "const adjustArg = (args = PPx.Arguments) => {",
+      "\tconst arr = [$1];",
+      "",
+      "\tfor (;!args.atEnd();args.atNext()) {",
+      "\t\tarr.push(args.Item())",
+      "\t}",
+      "$2",
+      "\treturn {",
+      "\t\t$3,",
+      "\t}",
+      "}$0"
+    ]
+  },
+  "Args with initial value": {
+    "prefix": "ar",
+    "body": [
+      "const adjustArgs = (args = PPx.Arguments) => {",
+      "\tconst arr = [$1];",
+      "\n\tfor (let i = 0, k = args.length; i < k; i++) {",
+      "\t\tarr[i] = args.Item(i);",
+      "\t}",
+      "\n\treturn {$2$1};",
+      "};$0"
+    ]
+  },
+  "PPx arguments JS": {
+    "prefix": "arj",
+    "body": [
+      "var adjustArg = function(args) {",
+      "\tvar arr = [$1];",
+      "",
+      "\tfor (;!args.atEnd();args.atNext()) {",
+      "\t\tarr.push(args.Item())",
+      "\t}",
+      "$2",
+      "\treturn {",
+      "\t\t$3,",
+      "\t}",
+      "}$0"
+    ]
+  }
+}

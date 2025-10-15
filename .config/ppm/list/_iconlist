@@ -1,0 +1,78 @@
+[group]
+app	= exe
+arc	= zip,7z,rar,cab
+audio	= mp3,wav
+config	= cfg,ini
+clang	= c,h,cpp
+db	= json
+doc	= txt
+dos	= bat
+git	= git,gitignore,gitmodules
+java	= java,jar
+js	= js,js9,jsc
+img	= jpg,jpeg,bmp,png,gif,webp
+lib	= dll
+ruby	= rb,gem
+video	= mp4,webm
+web	= html,xml
+win	= vbs
+[endgroup]
+
+[ext]
+app	= u61474
+;app	= 
+arc	= u61894
+;arc	= 
+audio	= u61441
+;audio	= 
+clang	= u58953
+;clang	= 
+config	= u58910
+;config	= 
+css	= u59209
+;css	= 
+db	= u61888
+;db	= 
+doc	= u61788
+;doc	= 
+dos	= u58921
+;dos	= 
+git	= u61907
+;git	= 
+img	= u61893
+;img	= 
+java	= u59192
+;java	= 
+js	= u58892
+;js	= 
+lf	= u62558
+;lf	= 
+lib	= u61573
+;lib	= 
+lua	= u58912
+;lua	= 
+md	= u58889
+;md	= 
+pdf	= u60139
+;pdf	= 
+pls	= u59006
+;pls	= 
+pys	= u58886
+;pys	= 
+ruby	= u59193
+;ruby	= 
+ts	= u58920
+;ts	= 
+video	= u61448
+;video	= 
+vim	= u58923
+;vim	= 
+web	= u61612
+;web	= 
+win	= u61818
+;win	= 
+;PPx1.97現在、*を設定するとX_Dicn(directory)が上書きされるようだ
+;*	= u61736
+;*	= 
+[endext]
+

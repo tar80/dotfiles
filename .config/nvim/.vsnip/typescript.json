@@ -1,0 +1,131 @@
+{
+  "Template": {
+    "prefix": "temp",
+    "body": ["/* @file $1", " * @return $2", " * @arg $3", " */", "\n'use strict';\n${0}"]
+  },
+  "Import": {
+    "prefix": "imp",
+    "body": "import ${1} from '${2:@ppmdev/modules/}${3:$1}';${0}"
+  },
+  "Import relative": {
+    "prefix": "impr",
+    "body": "import ${1} from './${2}${3:$1}';${0}"
+  },
+  "Import polyfill": {
+    "prefix": "impp",
+    "body": "import '@ppmdev/polyfills/${1}';${0}"
+  },
+  "Main function": {
+    "prefix": "ma",
+    "body": "const main = ():${1:void} => {\n\t$0\n}\n\nmain()"
+  },
+  "Comment": {
+    "prefix": "come",
+    "body": "/**\n * $1\n */"
+  },
+  "FileSystemObject": {
+    "prefix": "fs",
+    "body": "const fs = PPx.CreateObject('Scripting.FileSystemObject');\n$0"
+  },
+  "Object inline": {
+    "prefix": "obji",
+    "body": "'$1': '$2',\n$0"
+  },
+  "Object arrow function": {
+    "prefix": "objaf",
+    "body": "$1('$2') $3,\n$0"
+  },
+  "Object function": {
+    "prefix": "objf",
+    "body": "'$1': function ('$2') {$3},\n$0"
+  },
+  "If": {
+    "prefix": "if",
+    "body": "if ($1) {\n\t$2\n}$3\n$0"
+  },
+  "For loop": {
+    "prefix": "for",
+    "body": ["for (let ${1:i} = ${2:0}; ${1:i} < ${3:k}; ${1:i}++) {", "\t$4", "}", "\n$0"]
+  },
+  "For loop enumerate": {
+    "prefix": "forat",
+    "body": ["for (const ${1:entry} = PPx.${2:Entry.}$3; !${1:entry}.atEnd(); ${1:entry}.moveNext()) {", "\t$4", "}", "\n$0"]
+  },
+  "For loop limit": {
+    "prefix": "forl",
+    "body": [
+      "for (let ${1:i} = ${2:0}, ${3:k} = ${4:array}.length; ${1:i} < ${3}; ${1:i}++) {",
+      "\tconst ${5:element} = ${4:array}[${1:i}];",
+      "\t$0",
+      "}"
+    ]
+  },
+  "For of": {
+    "prefix": "forof",
+    "body": "for (const ${1:item} of ${2:${1}s}) {\n\t$0\n}"
+  },
+  "Arrow function": {
+    "prefix": "af",
+    "body": "($1): $2 => $0"
+  },
+  "Anonymous arrow function": {
+    "prefix": "afn",
+    "body": "(($1: $2): $3 => $0)()"
+  },
+  "Function": {
+    "prefix": "func",
+    "body": "function ($1) {$2}"
+  },
+  "Anonymous function": {
+    "prefix": "funcn",
+    "body": "(function ($1) {$2})()"
+  },
+  "Do loop": {
+    "prefix": "do",
+    "body": "do{\n\t$1\n} while($0);"
+  },
+  "While": {
+    "prefix": "while",
+    "body": "while ($1) {\n\t$2\n}"
+  },
+  "ppm.execute": {
+    "prefix": "ppme",
+    "body": "ppm.execute('${1:.}', '$2')$0"
+  },
+  "ppm.extract": {
+    "prefix": "ppmt",
+    "body": "ppm.extract('${1:.}', '$2')$0"
+  },
+  "Language object": {
+    "prefix": "lan",
+    "body": ["{", "\ten: {", "\t\t$1: '$2',", "\t},", "\tja: {", "\t\t$1: '$2'", "\t}", "}"]
+  },
+  "Annotation": {
+    "prefix": "an",
+    "body": "/*$1 */$0"
+  },
+  "Annotation multi line": {
+    "prefix": "ann",
+    "body": ["/**", " * @$1", " */$0"]
+  },
+  "Annotation multi line next": {
+    "prefix": "anmn",
+    "body": ["", "* @$1"]
+  },
+  "Ts ignore": {
+    "prefix": "tsi",
+    "body": "// @ts-ignore"
+  },
+  "Jest describe": {
+    "prefix": "desc",
+    "body": ["describe('$1', function () {", "\t$2", "});"]
+  },
+  "Jest it": {
+    "prefix": "it",
+    "body": ["it('$1', () => {", "\t$2", "});"]
+  },
+  "Jest expect": {
+    "prefix": "exp",
+    "body": ["expect(${1}).${2}"]
+  }
+}
