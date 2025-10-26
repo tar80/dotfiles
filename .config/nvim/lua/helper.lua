@@ -221,7 +221,6 @@ M.set_macros = function()
   fn.setreg('b', string.format([[V:s \//\\%s]], k('<CR>')))
   fn.setreg('d', string.format([[V:s \\/\\\\%s]], k('<CR>')))
   fn.setreg('s', string.format([[V:s \\\\/\/%s]], k('<CR>')))
-  fn.setreg('k', string.format([[:let @=@w%s]], k('<Left><Left><Left>')))
   vim.notify('[Info] Registered macros', vim.log.levels.INFO)
 end
 

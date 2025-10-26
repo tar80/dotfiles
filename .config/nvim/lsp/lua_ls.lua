@@ -1,10 +1,10 @@
 local helper = require('helper')
-local luals_root = helper.mason_apps('lua-language-server')
+local _root = helper.mason_apps('lua-language-server')
 local lazy_plugins = helper.xdg_path('data', 'lazy')
 
 local PLACE_HOLDER = '-- workspace='
 local WORKSPACE_LIBRARY = {
-  luals_root .. '/locale/ja-jp/meta.lua',
+  _root .. '/locale/ja-jp/meta.lua',
   lazy_plugins .. '/snacks.nvim/lua/snacks/meta',
   lazy_plugins .. '/flash.nvim/lua/flash/meta',
   '$VIMRUNTIME/lua/vim',
@@ -29,8 +29,8 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = { luals_root .. '/bin/lua-language-server.exe' },
-  cmd_cwd = luals_root .. '/bin',
+  cmd = { _root .. '/bin/lua-language-server.exe' },
+  cmd_cwd = _root .. '/bin',
   filetypes = { 'lua' },
   root_markers = {
     '.luarc.json',

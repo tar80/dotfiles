@@ -192,9 +192,11 @@ api.nvim_create_autocmd('LspAttach', {
 })
 
 local enable_types = {
+  'denols',
   'lua_ls',
   -- 'emmylua_ls',
   'jsonls',
+  'ts_ls',
 }
 
 -- vim.lsp.config('*', {

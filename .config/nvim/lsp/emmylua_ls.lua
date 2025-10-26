@@ -11,11 +11,11 @@
 --- It might require you to provide cargo binaries installation path in it.
 
 local helper = require('helper')
-local root = helper.mason_apps('emmylua_ls')
+local _root = helper.mason_apps('emmylua_ls')
 
 ---@type vim.lsp.Config
 return {
-  cmd = { root .. '/emmylua_ls.exe' },
+  cmd = { _root .. '/emmylua_ls.exe' },
   filetypes = { 'lua' },
   root_markers = {
     '.luarc.json',

@@ -1,7 +1,20 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.3.0/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
@@ -22,7 +35,6 @@
         "noParameterAssign": "off",
         "noUselessElse": "off",
         "noUnusedTemplateLiteral": "warn",
-        "noVar": "off",
         "useConst": "off",
         "useDefaultParameterLast": "off",
         "useFilenamingConvention": "off",
@@ -43,8 +55,7 @@
   },
   "formatter": {
     "enabled": true,
-    "formatWithErrors": true,
-    "ignore": []
+    "formatWithErrors": true
   },
   "json": {
     "parser": {
@@ -70,10 +81,5 @@
       "indentWidth": 2,
       "lineWidth": 140
     }
-  },
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
   }
 }

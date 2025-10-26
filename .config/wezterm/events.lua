@@ -77,11 +77,12 @@ end)
 
 ---@desc maximize all displayed windows on startup
 wezterm.on('gui-startup', function(cmd)
-  local tab, pane, win =
-    mux.spawn_window({
-      args = { string.format('%s/ppbw.exe', os.getenv('PPX_DIR')), '-q', '-bootid:w' },
-      set_environment_variables = { PATH = 'D:\\Apps\\bin;' .. os.getenv('GIT_INSTALL_ROOT') .. '\\usr\\bin;' .. os.getenv('PATH') }
-    })
+  local tab, pane, win = mux.spawn_window({
+    args = { string.format('%s/ppbw.exe', os.getenv('PPX_DIR')), '-q', '-bootid:w' },
+    set_environment_variables = {
+      PATH = 'D:\\Apps\\bin;' .. os.getenv('GIT_INSTALL_ROOT') .. '\\usr\\bin;' .. os.getenv('PATH'),
+    },
+  })
   win:gui_window():maximize()
   if cmd then
     local client = launcher.clients[cmd.args[1]]
@@ -192,7 +193,7 @@ wezterm.on('update-right-status', function(window, pane)
   end
 end)
 
-wezterm.on("window-focus-changed", function(window, pane)
-  local zenhan_path =  string.format('/apps/zenhan/current/zenhan.exe', os.getenv('Scoop'))
+wezterm.on('window-focus-changed', function(window, pane)
+  local zenhan_path = string.format('/apps/zenhan/current/zenhan.exe', os.getenv('Scoop'))
   os.execute(zenhan_path)
 end)
