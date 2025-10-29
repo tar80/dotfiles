@@ -763,28 +763,35 @@ return {
     {
       '<Leader>z',
       function()
-        local opts = {
-          prompt = 'zoxide query: ',
-        }
-        vim.ui.input(opts, function(input)
-          if input and input ~= '' then
-            vim.system({ 'zoxide', 'add', input }, { text = true })
-            vim.system({ 'zoxide', 'query', input }, { text = true }, function(data)
-              vim.schedule(function()
-                if data.code == 0 and data.stdout then
-                  Snacks.picker.explorer({
-                    cwd = data.stdout:gsub('\n', ''),
-                  })
-                else
-                  vim.notify('zoxide: no match found', 3)
-                end
-              end)
-            end)
-          end
-        end)
+        Snacks.picker.zoxide()
       end,
       desc = 'Zoxide',
     },
+    -- {
+    --   '<Leader>z',
+    --   function()
+    --     local opts = {
+    --       prompt = 'zoxide query: ',
+    --     }
+    --     vim.ui.input(opts, function(input)
+    --       if input and input ~= '' then
+    --         vim.system({ 'zoxide', 'add', input }, { text = true })
+    --         vim.system({ 'zoxide', 'query', input }, { text = true }, function(data)
+    --           vim.schedule(function()
+    --             if data.code == 0 and data.stdout then
+    --               Snacks.picker.explorer({
+    --                 cwd = data.stdout:gsub('\n', ''),
+    --               })
+    --             else
+    --               vim.notify('zoxide: no match found', 3)
+    --             end
+    --           end)
+    --         end)
+    --       end
+    --     end)
+    --   end,
+    --   desc = 'Zoxide',
+    -- },
     {
       '<Leader>k',
       function()
@@ -818,8 +825,8 @@ return {
       function()
         local row = vim.api.nvim_win_get_cursor(0)[1]
         require('staba').wrap_no_fade_background(Snacks.picker.lines, {
-          focus = 'list',
-          pattern = vim.fn.expand('<cword>'),
+          -- focus = 'list',
+          -- pattern = vim.fn.expand('<cword>'),
           matcher = { fuzzy = false, smartcase = true, ignorecase = true, sort_empty = false },
           layout = {
             preset = 'ivy_split',
@@ -830,12 +837,12 @@ return {
               width = 0,
               height = 0.3,
               position = 'bottom',
-              border = 'none',
-              {
-                box = 'horizontal',
-                { win = 'list', border = 'none' },
-                { win = 'preview', width = 0.6, border = 'none' },
-              },
+              -- border = 'none',
+              -- {
+              --   box = 'horizontal',
+              --   { win = 'list', border = 'none' },
+              --   { win = 'preview', width = 0.6, border = 'none' },
+              -- },
             },
           },
           on_show = function(picker)

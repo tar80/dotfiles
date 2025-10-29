@@ -286,6 +286,9 @@ return {
       default = { 'snippets', 'lsp', 'path', 'buffer', 'copilot' },
       per_filetype = { codecompanion = { 'codecompanion' } },
       providers = {
+        snippets = {
+          score_offset = 100
+        },
         copilot = {
           name = 'copilot',
           module = 'blink-copilot',
@@ -294,7 +297,7 @@ return {
           opts = {
             max_completions = 2,
             max_attempts = 3,
-            debounce = 200, ---@type integer | false
+            debounce = 100, ---@type integer | false
             auto_refresh = { backward = false, forward = true },
           },
         },

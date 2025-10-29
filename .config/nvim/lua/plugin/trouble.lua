@@ -32,7 +32,8 @@ return {
               return
             end
           end
-          trouble_api.open('lsp_definitions')
+          -- trouble_api.open('lsp_definitions')
+          trouble_api.open('lsp_references')
         end,
       })
     end, { desc = 'Trouble definitions' }) -- }}}

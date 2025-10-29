@@ -9,8 +9,8 @@ local transparent = {}
 local tr = vim.g.tr_bg
 if tr then
   vim.o.winblend = 0
-  light_theme = 'dark'
-  dark_theme = 'mallow'
+  light_theme = 'glass'
+  dark_theme = 'glass'
   transparent =
     { 'Normal', 'NormalNC', 'NormalFloat', 'LineNr', 'SignColumn', 'FloatBorder', 'FloatTitle', 'FloatFooter' }
 end
@@ -53,20 +53,18 @@ return {
         tabline = true,
       },
       custom_highlights = function(opts, colors)
-        return {
+        return tr and {} or {
           light = {
             MsgArea = { bg = '#F2FBE9' },
             CursorLineHold = { fg = 'NONE', bg = '#FDE3DD' },
             BlinkCmpSignatureHelp = { bg = colors.diff_change },
             BlinkCmpSignatureHelpBorder = { fg = colors.diff_change },
-            BlinkCmpSignatureHelpActiveParameter = { fg = colors.match, bg = colors.diff_add, style = 'bold' },
           },
           dark = {
             MsgArea = { bg = '#102025' },
             CursorLineHold = { fg = 'NONE', bg = '#3E1D31' },
             BlinkCmpSignatureHelp = { bg = colors.diff_change },
             BlinkCmpSignatureHelpBorder = { fg = colors.diff_change },
-            BlinkCmpSignatureHelpActiveParameter = { fg = colors.match, bg = colors.add, style = 'bold' },
           },
         }
       end,
