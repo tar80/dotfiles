@@ -186,6 +186,8 @@ config.bind('q', 'nop')
 # config.bind('}}', 'navigate next -t')
 config.bind(',', 'scroll-page 0 -0.5')
 config.bind('.', 'scroll-page 0 0.5')
+config.bind('<Space>', 'scroll-page 0 1')
+config.bind('<Shift-Space>', 'scroll-page 0 -1')
 
 ## Bindings for caret mode
 # config.bind('$', 'move-to-end-of-line', mode='caret')
