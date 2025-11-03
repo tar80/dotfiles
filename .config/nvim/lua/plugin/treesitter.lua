@@ -1,4 +1,4 @@
-local filetypes = { 'lua', 'javascript', 'typescript', 'json', 'diff', 'md', 'vim' }
+local filetypes = { 'lua', 'javascript', 'typescript', 'json', 'diff', 'markdown', 'vim' }
 
 return {
   {

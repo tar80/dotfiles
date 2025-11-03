@@ -53,20 +53,25 @@ return {
         tabline = true,
       },
       custom_highlights = function(opts, colors)
-        return tr and {} or {
-          light = {
-            MsgArea = { bg = '#F2FBE9' },
-            CursorLineHold = { fg = 'NONE', bg = '#FDE3DD' },
-            BlinkCmpSignatureHelp = { bg = colors.diff_change },
-            BlinkCmpSignatureHelpBorder = { fg = colors.diff_change },
-          },
-          dark = {
-            MsgArea = { bg = '#102025' },
-            CursorLineHold = { fg = 'NONE', bg = '#3E1D31' },
-            BlinkCmpSignatureHelp = { bg = colors.diff_change },
-            BlinkCmpSignatureHelpBorder = { fg = colors.diff_change },
-          },
-        }
+        return tr and {}
+          or {
+            light = {
+              MsgArea = { bg = '#F2F0EE' },
+              CursorLineHold = { fg = 'NONE', bg = '#FDE3DD' },
+              BlinkCmpSignatureHelp = { bg = colors.shade_cyan },
+              -- BlinkCmpSignatureHelpBorder = { fg = colors.shade_cyan },
+              BlinkCmpDoc = { fg = colors.fg, bg = colors.shade_blue },
+              BlinkCmpDocSeparator = { fg = colors.gray, bg = colors.shade_blue },
+            },
+            dark = {
+              MsgArea = { bg = '#102025' },
+              CursorLineHold = { fg = 'NONE', bg = '#3E1D31' },
+              BlinkCmpSignatureHelp = { bg = colors.shade_cyan },
+              -- BlinkCmpSignatureHelpBorder = { fg = colors.shade_cyan },
+              BlinkCmpDoc = { fg = colors.fg, bg = colors.shade_blue },
+              BlinkCmpDocSeparator = { fg = colors.gray, bg = colors.shade_blue },
+            },
+          }
       end,
       integrations = {
         quicker = true,
@@ -87,6 +92,7 @@ return {
         rereope = true,
         sandwich = true,
         skkeleton_indicator = true,
+        skkeleton_henkan_highlight = true,
         snacks = true,
         staba = true,
         trouble = true,

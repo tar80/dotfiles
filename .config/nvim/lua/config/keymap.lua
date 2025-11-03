@@ -96,15 +96,15 @@ keymap.set('n', '<Space>z', function()
   if api.nvim_get_option_value('buftype', { buf = 0 }) == 'nofile' then
     return api.nvim_buf_delete(0, { unload = true })
   end
+  if vim.wo.diff then
+    vim.wo.diff = false
+    -- vim.cmd.bdelete(altnr)
+  end
   local altnr = fn.bufnr('#')
   if altnr ~= -1 and api.nvim_get_option_value('buftype', { buf = altnr }) == 'nofile' then
     vim.cmd.bdelete(altnr)
     return
     -- return api.nvim_buf_delete(altnr, {unload = true})
-  end
-  if vim.wo.diff then
-    vim.wo.diff = false
-    vim.cmd.bdelete(altnr)
   end
   local qfnr = fn.getqflist({ qfbufnr = 0 }).qfbufnr
   if qfnr ~= 0 then

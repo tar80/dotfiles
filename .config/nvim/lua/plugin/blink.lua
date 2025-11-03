@@ -20,7 +20,34 @@ return {
     enabled = function()
       return not vim.g['skkeleton#enabled']
     end,
-    keymap = { preset = 'enter' },
+    keymap = {
+      preset = 'none',
+      ['<C-e>'] = { 'cancel', 'fallback' },
+      ['<CR>'] = { 'accept', 'fallback' },
+
+      ['<Tab>'] = {
+        function(cmp)
+          if cmp.snippet_active() then
+            return cmp.accept()
+          else
+            return cmp.select_and_accept()
+          end
+        end,
+        'snippet_forward',
+        'fallback',
+      },
+      ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
+
+      ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+      ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
+
+      ['<Up>'] = { 'scroll_documentation_up', 'fallback' },
+      ['<Down>'] = { 'scroll_documentation_up', 'fallback' },
+      ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
+      ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+
+      ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+    },
     appearance = { nerd_font_variant = 'mono' },
     cmdline = {
       keymap = { preset = 'cmdline' },
@@ -129,7 +156,7 @@ return {
         max_height = 10,
         border = 'none',
         winblend = 20,
-        -- winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
+        winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
         scrolloff = 2,
         scrollbar = true,
         -- Which directions to show the window,
@@ -287,7 +314,7 @@ return {
       per_filetype = { codecompanion = { 'codecompanion' } },
       providers = {
         snippets = {
-          score_offset = 100
+          score_offset = 100,
         },
         copilot = {
           name = 'copilot',

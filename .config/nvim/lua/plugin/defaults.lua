@@ -75,6 +75,9 @@ return { -- {{{2
             vim.keymap.set('v', 'I', function()
               live_rectangle_replace('I', { linewise_blockify = true })
             end, { desc = 'Tartar live_replace' })
+            vim.keymap.set('v', 'gI', function()
+              live_rectangle_replace('I', { linewise_blockify = true, zero = true })
+            end, { desc = 'Tartar live_replace' })
             vim.keymap.set('v', 'A', function()
               live_rectangle_replace('A', { after = true, fill = true, linewise_blockify = true })
             end, { desc = 'Tartar live_replace' })
@@ -242,8 +245,6 @@ return { -- {{{2
       --   javascript = { 'tag.delimiter', 'punctuation.bracket' },
       -- },
       ignore_filetypes = {
-        'cmp_menu',
-        'cmp_docs',
         'fidget',
         'snacks_picker_input',
       },
@@ -254,7 +255,6 @@ return { -- {{{2
       sign = false,
       show_parent = false,
       show_next = true,
-      show_word = true,
     },
   }, -- }}}
   { -- {{{3 smartword

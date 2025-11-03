@@ -1,6 +1,8 @@
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1:
 --------------------------------------------------------------------------------
 local helper = require('helper')
+local bubble = require('tartar.icon.ui').frame.arrow
+local bubble_border = require('tartar.helper').generate_decorative_line(bubble.left, bubble.right, 'SkkeletonHenkanBorder')
 
 -- local piyo = string.char(0xF0, 0x9F, 0x90, 0xA4)
 
@@ -14,10 +16,10 @@ local skkeleton_init = function() -- {{{2
     globalKanaTableFiles = { helper.xdg_path('config', 'skk/azik_us.rule') },
     eggLikeNewline = true,
     showCandidatesCount = 2,
-    -- markerHenkan = '',
-    -- markerHenkanSelect = '',
-    markerHenkan = '🐤',
-    markerHenkanSelect = '🐥',
+    markerHenkan = '',
+    markerHenkanSelect = '',
+    -- markerHenkan = '🐤',
+    -- markerHenkanSelect = '🐥',
     sources = { 'deno_kv' },
     -- sources = { 'deno_kv', 'skk_dictionary' },
   })
@@ -49,6 +51,47 @@ end --}}}
 return {
   { -- {{{2 skkeleton
     'vim-skk/skkeleton',
+    dependencies = {
+      'NI57721/skkeleton-henkan-highlight',
+      {-- {{{2 state-popup
+        'NI57721/skkeleton-state-popup',
+        config = function()
+          vim.fn['skkeleton_state_popup#config']({
+            labels = {
+              input = {
+                hira = ' 󱌴 ',
+                kata = ' 󱌵 ',
+                hankata = ' 󱌶 ',
+                zenkaku = ' 󰚞 ',
+              },
+              ['input:okurinasi'] = {
+                hira = '▽󱌴 ',
+                kata = '▽󱌵 ',
+                hankata = '▽󱌶 ',
+                zenkaku = '▽󰚞 ',
+                abbrevText = ' 󱌯 ',
+              },
+              ['input:okuriari'] = {
+                hira = '▽󱌴 ',
+                kata = '▽󱌵 ',
+                hankata = '▽󱌶 ',
+                zenkaku = '▽󰚞 ',
+              },
+              henkan = {
+                hira = '▼󱌴 ',
+                kata = '▼󱌵 ',
+                hankata = '▼󱌶 ',
+                zenkaku = '▼󰚞 ',
+                abbrevText = ' 󱌯 ',
+              },
+              latin = '_A ',
+            },
+            opts = { relative = 'cursor', col = 0, row = 1, anchor = 'NW', style = 'minimal', border = bubble_border},
+          })
+          vim.cmd([[call skkeleton_state_popup#run()]])
+        end,
+      },-- }}}
+    },
     config = function()
       local augroup = vim.api.nvim_create_augroup('rc_skkeleton', { clear = true })
       ---@desc Autocommand
@@ -69,23 +112,23 @@ return {
       -- }}}
     end,
   }, --}}}
-  { -- {{{2 skkeleton_indicator
-    'delphinus/skkeleton_indicator.nvim',
-    event = 'VeryLazy',
-    opts = {
-      alwaysShown = false,
-      fadeOutMs = 0,
-      hiraText = ' 󱌴 ',
-      kataText = ' 󱌵 ',
-      hankataText = ' 󱌶 ',
-      zenkakuText = ' 󰚞 ',
-      abbrevText = ' 󱌯 ',
-      row = 1,
-      border = 'none',
-      -- border = function()
-      --   return { '', '', '', '┃', '', '', '', '┃' }
-      -- end,
-      -- useDefaultHighlight = false,
-    },
-  }, -- }}}
+  -- { -- {{{2 skkeleton_indicator
+  --   'delphinus/skkeleton_indicator.nvim',
+  --   event = 'VeryLazy',
+  --   opts = {
+  --     alwaysShown = false,
+  --     fadeOutMs = 0,
+  --     hiraText = ' 󱌴 ',
+  --     kataText = ' 󱌵 ',
+  --     hankataText = ' 󱌶 ',
+  --     zenkakuText = ' 󰚞 ',
+  --     abbrevText = ' 󱌯 ',
+  --     row = 1,
+  --     border = 'none',
+  --     -- border = function()
+  --     --   return { '', '', '', '┃', '', '', '', '┃' }
+  --     -- end,
+  --     -- useDefaultHighlight = false,
+  --   },
+  -- }, -- }}}
 }
