@@ -7,7 +7,7 @@
 [init]
 	defaultBranch = main
 [core]
-	editor = D:/Scoop/apps/neovim-nightly/current/bin/nvim.exe --cmd 'let g:start_level=\\'minimal\\''
+	editor = D:/Scoop/apps/neovim-nightly/current/bin/nvim.exe --cmd 'let g:start_level="minimal"'
 	symlinks = true
 	autocrlf = false
 	safecrlf = true
