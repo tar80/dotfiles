@@ -10,10 +10,11 @@ gw{motion} 行整形
 gx URIを開く
 gl. lsp
 gs. git signs
+g/ 正規表現履歴絞り込み
 
 # oparetor
-if,af function-block
-i%,a% any-block
+im,am function-block
+i%,a% matchwith-block
 
 # quickfix
 cdo リストに対してコマンドを実行
@@ -46,7 +47,6 @@ _  "* + operator-replace
   o 他のペインを削除
   ] タグを開く
   r ペイン位置をずらす
-<Space>/ 正規表現履歴絞り込み
 
 # insert
 <C-g>u undo区切り
@@ -56,12 +56,11 @@ _  "* + operator-replace
 ^<C-d> 字下げ削除 改行の字下げ維持
 
 # cmdline
-:Z <query> zoxide query
 :messages
 :vnew 新規縦開き
 :g/^/m0 reverse lines
-:v/str/d 含まない行を削除
-:argadd <file> バッファに追加
+:v/<str>/d 含まない行を削除
+:argadd <file> バッファリストに追加
 :tabc タブページ閉じる
 :tab help  新規タブで開く
 :helpg     検索してヘルプ

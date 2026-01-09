@@ -34,9 +34,9 @@ return {
     local helper = require('helper')
     local feedkey = helper.feedkey
 
-    vim.lsp.config('*', {
-      capabilities = require('cmp_nvim_lsp').default_capabilities(),
-    })
+    -- vim.lsp.config('*', {
+    --   capabilities = require('cmp_nvim_lsp').default_capabilities(),
+    -- })
     ---@desc Vsnip
     vim.g.vsnip_snippet_dir = helper.xdg_path('config', '.vsnip')
 

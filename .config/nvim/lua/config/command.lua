@@ -27,6 +27,19 @@ local augroup = api.nvim_create_augroup('config/command', {})
 --   end,
 -- })
 
+--Disable ime {{{2
+local zenhan = require('helper').scoop_apps('apps/zenhan/current/zenhan.exe')
+api.nvim_create_autocmd('ModeChanged', {
+  desc = 'Diseble IME',
+  group = augroup,
+  callback = function(ev)
+    if ev.match:find('^[ic]:.*') then
+      vim.system({ zenhan, '0' }, { text = true })
+    end
+  end,
+})-- }}}
+
+---Update shada on CmdWinLeave {{{2
 local _wshada_triggered
 local function _update_shada()
   _wshada_triggered = true

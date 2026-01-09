@@ -133,7 +133,7 @@ keymap.set('i', '<C-b>', '<Left>')
 ---Alternate Ctrl-@
 keymap.set('i', '<C-z>', '<C-a><Esc>')
 -- keymap.set('i', '<C-u>', '<Cmd>normal u<CR>')
-keymap.set({ 'i', 'c' }, '<C-d>', '<Del>')
+keymap.set({ 'i', 'c' }, '<C-l>', '<Del>')
 keymap.set('c', '<C-a>', '<Home>')
 keymap.set('c', '<C-b>', '<Left>')
 

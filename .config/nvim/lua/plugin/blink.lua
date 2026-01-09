@@ -95,7 +95,7 @@ return {
         -- LSPs can indicate when to show the completion window via trigger characters
         -- however, some LSPs (i.e. tsserver) return characters that would essentially
         -- always show the window. We block these by default.
-        show_on_blocked_trigger_characters = { ' ', '\n', '\t', '=' },
+        show_on_blocked_trigger_characters = { '\n', '\t', '=' },
         -- You can also block per filetype with a function:
         -- show_on_blocked_trigger_characters = function(ctx)
         --   if vim.bo.filetype == 'markdown' then return { ' ', '\n', '\t', '.', '/', '(', '[' } end
@@ -155,7 +155,7 @@ return {
         min_width = 20,
         max_height = 10,
         border = 'none',
-        winblend = 20,
+        winblend = 10,
         winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
         scrolloff = 2,
         scrollbar = true,
@@ -171,7 +171,7 @@ return {
         -- Whether to automatically show the window when new completion items are available
         auto_show = true,
         -- Delay before showing the completion menu
-        auto_show_delay_ms = 0,
+        auto_show_delay_ms = 50,
 
         -- Screen coordinates of the command line
         -- cmdline_position = function()
@@ -299,7 +299,7 @@ return {
         max_height = 10,
         border = bubble_border,
         winblend = 0,
-        winhighlight = 'Normal:BlinkCmpSignatureHelp,FloatBorder:BlinkCmpSignatureHelpBorder,Search:None',
+        -- winhighlight = 'Normal:BlinkCmpSignatureHelp,FloatBorder:BlinkCmpSignatureHelpBorder,Search:None',
         scrollbar = false,
         direction_priority = { 'n', 's' },
         treesitter_highlighting = true,
@@ -310,9 +310,12 @@ return {
     snippets = { preset = 'vsnip' },
     sources = {
       min_keyword_length = 2,
-      default = { 'snippets', 'lsp', 'path', 'buffer', 'copilot' },
+      default = { 'lsp', 'snippets', 'path', 'buffer', 'copilot' },
       per_filetype = { codecompanion = { 'codecompanion' } },
       providers = {
+        lsp = {
+          score_offset = 101,
+        },
         snippets = {
           score_offset = 100,
         },

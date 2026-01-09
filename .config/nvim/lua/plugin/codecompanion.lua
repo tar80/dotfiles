@@ -3,7 +3,7 @@
 
 local use_model = {
   name = 'gemini',
-  model = 'gemini-2.0-flash',
+  model = 'gemini-2.5-flash-lite',
 }
 
 return {
@@ -38,6 +38,18 @@ return {
           return require('codecompanion.adapters').extend('gemini', {
             env = {
               api_key = vim.env.GEMINI_API_KEY,
+            },
+          })
+        end,
+      },
+      acp = {
+        gemini_cli = function()
+          return require('codecompanion.adapters').extend('gemini_cli', {
+            defaults = {
+              auth_method = 'gemini-api-key',
+            },
+            env = {
+              GEMINI_API_KEY = vim.env.GEMINI_API_KEY,
             },
           })
         end,
@@ -119,10 +131,10 @@ return {
         },
       },
     },
-    strategies = {
-      agent = {
-        adapter = 'gemini',
-      },
+    interactions = {
+      -- agent = {
+      --   adapter = 'gemini'
+      -- },
       inline = {
         adapter = use_model,
       },
@@ -183,7 +195,7 @@ return {
           is_default = true,
           is_slash_cmd = false,
           modes = { 'v' },
-          short_name = 'refactor',
+          alias = 'refactor',
           auto_submit = true,
           user_prompt = false,
           stop_context_insertion = true,

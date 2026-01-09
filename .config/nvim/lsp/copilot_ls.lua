@@ -38,7 +38,7 @@ local function sign_in(bufnr, client)
         if continue == 1 then
           client:exec_cmd(command, { bufnr = bufnr }, function(cmd_err, cmd_result)
             if cmd_err then
-              vim.notify(err.message, vim.log.levels.ERROR)
+              vim.notify(cmd_err.message, vim.log.levels.ERROR)
               return
             end
             if cmd_result.status == 'OK' then
@@ -81,23 +81,26 @@ local copilot_exe = ('%s/node_modules/.bin/copilot-language-server.cmd'):format(
 
 ---@type vim.lsp.Config
 return {
-  name = 'copilot_ls',
+  -- name = 'copilot_ls',
   cmd = { copilot_exe, '--stdio' },
   root_markers = { '.git' },
   init_options = {
     editorInfo = {
-      name = 'neovim',
+      name = 'Neovim',
       version = tostring(vim.version()),
     },
     editorPluginInfo = {
-      name = 'Github Copilot LSP for Neovim',
-      version = '0.0.1',
+      name = 'Neovim',
+      version = tostring(vim.version()),
     },
   },
   settings = {
     nextEditSuggestions = {
-      enabled = true,
+      enabled = false,
     },
+    -- telemetry = {
+    --   telemetryLevel = 'all',
+    -- },
   },
   -- on_init = function()
   -- end,

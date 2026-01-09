@@ -19,6 +19,7 @@ return { -- {{{2
     init = function() -- {{{4
       vim.api.nvim_create_autocmd('User', {
         pattern = 'VeryLazy',
+        once = true,
         callback = function()
           local sauce = require('tartar.sauce')
           local abbrev = sauce.abbrev()
@@ -59,7 +60,7 @@ return { -- {{{2
               shadad = { { '!rm ~/.local/share/nvim-data/shada/main.shada.tmp*' } },
               s = { { '%s//<Left>', 's//<Left>' }, true },
               ss = { { '%s///<Left>', 's///<Left>' }, true },
-              z = { { 'Z' } },
+              -- z = { { 'Z' } },
             },
           } ---}}}5
           abbrev:set('ia')
@@ -93,18 +94,20 @@ return { -- {{{2
             local function quit_recording()
               return vim.fn.reg_recording() == '' and 'qw' or 'q'
             end
-            local operatable_q = sauce.plugkey('n', 'operat_q', 'q')
+            local operatable_q = sauce.plugkey('n', 'listen_q', 'q')
             operatable_q({ ':', '/', '?', { 'w', quit_recording } })
-            local repeatable_g = sauce.plugkey('n', 'repeatable_g', 'g', true)
+            local repeatable_g = sauce.plugkey('n', 'repeat_g', 'g', true)
             repeatable_g({ 'j', 'k' })
-            local repeatable_z = sauce.plugkey('n', 'repeatable_z', 'z', true)
+            local repeatable_z = sauce.plugkey('n', 'repeat_z', 'z', true)
             repeatable_z({ 'h', 'l' })
-            local replaceable_space = sauce.plugkey('n', 'replaceable_space', '<Space>', true)
-            replaceable_space({ { '-', '<C-w>-' }, { ';', '<C-w>+' }, { ',', '<C-w><' }, { '.', '<C-w>>' } })
-            local argumentable_H = sauce.plugkey('n', 'argumentable_H', 'H', true)
-            argumentable_H('H', '<PageUp>H')
-            local argumentable_L = sauce.plugkey('n', 'argumentable_L', 'L', true)
-            argumentable_L('L', '<PageDown>L')
+            local ctrl_window = sauce.plugkey('n', 'ctrl-win', '<Space>', true)
+            ctrl_window({ { '-', '<C-w>-' }, { ';', '<C-w>+' }, { ',', '<C-w><' }, { '.', '<C-w>>' } })
+            local scroll_H = sauce.plugkey('n', 'scroll_H', 'H', true)
+            scroll_H('H', '<PageUp>H')
+            local scroll_M = sauce.plugkey('n', 'scroll_M', 'M', true)
+            scroll_M('M', '<PageDown>M')
+            local scroll_L = sauce.plugkey('n', 'scroll_L', 'L', true)
+            scroll_L('L', '<PageDown>L')
           end -- }}}
 
           sauce.testmode({
@@ -183,9 +186,8 @@ return { -- {{{2
           active = {
             left = { 'search_count', 'snacks_profiler' },
             middle = {},
-            -- left = { 'staba_logo' },
             -- middle = { 'search_count' },
-            right = { '%<', 'diagnostics', ' ', git_branch, 'filetype', 'encoding', ' ', 'position' },
+            right = { '%<', 'diagnostics', ' ', 'copilot', git_branch, 'filetype', 'encoding', ' ', 'position' },
           },
           -- inactive = { left = {}, middle = { 'devicon', 'filename', '%*' }, right = {} },
         },
@@ -223,8 +225,9 @@ return { -- {{{2
       fret_enable_symbol = true,
       fret_repeat_notify = false,
       fret_smart_fold = true,
+      fret_multi_label = {filler = ' ', position = 'after'},
       fret_timeout = 9000,
-      fret_samekey_repeat = true,
+      fret_samekey_chain = true,
       -- beacon_opts = { hl = 'LazyButtonActive', interval = 80, blend = 30, decay = 15 },
       mapkeys = { fret_f = 'f', fret_F = 'F', fret_t = 't', fret_T = 'T' },
     },

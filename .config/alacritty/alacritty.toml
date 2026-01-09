@@ -60,4 +60,7 @@ bindings = [
   { key = "@", mode = "Vi", action = "ToggleSemanticSelection" },
   { key = "q", mode = "Vi", action = "ToggleViMode" },
   { key = "[", mods = "Control", mode = "Vi", action = "ToggleViMode" },
+  { key = "+", mods = "Control|Shift", action = "IncreaseFontSize" },
+  { key = "+", mods = "Control", action = "NONE" },
+  { key = "-", mods = "Control|Shift", action = "DecreaseFontSize" },
 ]

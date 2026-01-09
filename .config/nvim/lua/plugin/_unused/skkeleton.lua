@@ -1,8 +1,8 @@
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1:
 --------------------------------------------------------------------------------
 local helper = require('helper')
-local bubble = require('tartar.icon.ui').frame.arrow
-local bubble_border = require('tartar.helper').generate_decorative_line(bubble.left, bubble.right, 'SkkeletonHenkanBorder')
+local frame = require('tartar.icon.ui').frame.bubble
+local henkan_border = require('tartar.helper').generate_decorative_line(frame.left, frame.right, 'SkkeletonHenkanBorder')
 
 -- local piyo = string.char(0xF0, 0x9F, 0x90, 0xA4)
 
@@ -69,7 +69,7 @@ return {
                 kata = '▽󱌵 ',
                 hankata = '▽󱌶 ',
                 zenkaku = '▽󰚞 ',
-                abbrevText = ' 󱌯 ',
+                abbrev = ' 󱌯 ',
               },
               ['input:okuriari'] = {
                 hira = '▽󱌴 ',
@@ -82,11 +82,11 @@ return {
                 kata = '▼󱌵 ',
                 hankata = '▼󱌶 ',
                 zenkaku = '▼󰚞 ',
-                abbrevText = ' 󱌯 ',
+                abbrev = ' 󱌯 ',
               },
-              latin = '_A ',
+              latin = '',
             },
-            opts = { relative = 'cursor', col = 0, row = 1, anchor = 'NW', style = 'minimal', border = bubble_border},
+            opts = { relative = 'cursor', col = 0, row = 1, anchor = 'NW', style = 'minimal', border = henkan_border},
           })
           vim.cmd([[call skkeleton_state_popup#run()]])
         end,

@@ -33,6 +33,7 @@ return {
   cmd_cwd = _root .. '/bin',
   filetypes = { 'lua' },
   root_markers = {
+    '.emmyrc.json',
     '.luarc.json',
     '.luarc.jsonc',
     '.luacheckrc',
@@ -43,12 +44,17 @@ return {
     '.git',
   },
   workspace_required = false,
-  settings = { Lua = {} },
+  settings = {
+    Lua = {
+      codeLens = { enable = true },
+      hint = { enable = true, semicolon = 'Disable' },
+    },
+  },
   on_init = function(client, _)
     -- if client.workspace_folders then
     --   local path = client.workspace_folders[1].name
     --   if vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc') then
-   --     return
+    --     return
     --   end
     -- end
     ---@diagnostic disable-next-line: param-type-mismatch

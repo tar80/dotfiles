@@ -117,16 +117,16 @@ local options = { -- {{{2
     rtp = {
       reset = true,
       paths = {},
-      disabled_plugins = {
-        'gzip',
-        'matchit',
-        'matchparen',
-        'netrwPlugin',
-        'tarPlugin',
-        'tohtml',
-        'tutor',
-        'zipPlugin',
-      },
+      -- disabled_plugins = {
+      --   'gzip',
+      --   'matchit',
+      --   'matchparen',
+      --   'netrwPlugin',
+      --   'tarPlugin',
+      --   'tohtml',
+      --   'tutor',
+      --   'zipPlugin',
+      -- },
     },
   },
   pkg = {

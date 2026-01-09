@@ -1,6 +1,7 @@
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1:
 
-local icon = require('icon')
+local symbol_icon = require('tartar.icon.symbol')
+local ui_icon = require('tartar.icon.ui')
 
 ---@param sep_l string Left spearator
 ---@param sep_r string Right spearator
@@ -12,9 +13,9 @@ local function create_border(sep_l, sep_r, hlgroup)
 end
 
 local border = { -- {{{2
-  notify = create_border(icon.sep.bubble.l, icon.sep.bubble.r, 'NoiceMiniHintReverse'),
-  warn = create_border(icon.sep.bubble.l, icon.sep.bubble.r, 'NoiceMiniWarnReverse'),
-  error = create_border(icon.sep.bubble.l, icon.sep.bubble.r, 'NoiceMiniErrorReverse'),
+  notify = create_border(ui_icon.frame.bubble.left, ui_icon.frame.bubble.right, 'NoiceMiniHintReverse'),
+  warn = create_border(ui_icon.frame.bubble.left, ui_icon.frame.bubble.right, 'NoiceMiniWarnReverse'),
+  error = create_border(ui_icon.frame.bubble.left, ui_icon.frame.bubble.right, 'NoiceMiniErrorReverse'),
 } -- }}}2
 
 -- {{{2 any_wrap()
@@ -103,10 +104,10 @@ return {
         view = 'cmdline',
         opts = {},
         format = {
-          cmdline = { pattern = '^:', icon = icon.symbol.input, lang = 'vim' },
-          search_down = { kind = 'search', pattern = '^/', icon = icon.symbol.search_down, lang = 'regex' },
-          search_up = { kind = 'search', pattern = '^%?', icon = icon.symbol.search_up, lang = 'regex' },
-          input = { view = 'cmdline', icon = icon.lazy.cmd },
+          cmdline = { pattern = '^:', icon = symbol_icon.cmdline.input, lang = 'vim' },
+          search_down = { kind = 'search', pattern = '^/', icon = symbol_icon.cmdline.search_down, lang = 'regex' },
+          search_up = { kind = 'search', pattern = '^%?', icon = symbol_icon.cmdline.search_up, lang = 'regex' },
+          input = { view = 'cmdline', icon = ' ' },
           lua = false,
           filter = false,
           help = false,
@@ -114,7 +115,7 @@ return {
           error = {
             conceal = false,
             pattern = '^:vim%.',
-            icon = icon.state.failure,
+            icon = symbol_icon.status.failure,
             icon_hl_group = 'Error',
             lang = '',
           },
@@ -211,7 +212,7 @@ return {
             max_width = 120,
           },
           border = {
-            style = icon.border.quotation,
+            style = ui_icon.border.quotation,
             padding = { 0, 1 },
           },
           position = { row = 1, col = 0 },
@@ -249,7 +250,7 @@ return {
           },
         }, -- }}}
         warn = { -- {{{4
-          format = { { icon.severity.Warn, hl_group = 'NoiceMiniWarn' }, ' {message} ' },
+          format = { { symbol_icon.diagnostics.Warn, hl_group = 'NoiceMiniWarn' }, ' {message} ' },
           backend = 'mini',
           relative = 'editor',
           align = 'message-right',
@@ -266,7 +267,7 @@ return {
           },
         }, -- }}}
         error = { -- {{{4
-          format = { { icon.severity.Error, hl_group = 'NoiceMiniError' }, ' {message} ' },
+          format = { { symbol_icon.diagnostics.Error, hl_group = 'NoiceMiniError' }, ' {message} ' },
           backend = 'mini',
           relative = 'editor',
           align = 'message-right',
@@ -284,7 +285,7 @@ return {
         }, -- }}}
       }, -- }}}3
       format = { -- {{{3
-        level = { icons = { error = icon.severity.Error, warn = icon.severity.Warn, info = icon.severity.Info } },
+        level = { icons = { error = symbol_icon.diagnostics.Error, warn = symbol_icon.diagnostics.Warn, info = symbol_icon.diagnostics.Info } },
         spinner = { name = 'pipe', hl_group = nil },
         details = {
           '{date} ',
