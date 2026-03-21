@@ -17,7 +17,7 @@ return {
   -- font_size = 12.3,
   font_size = 13.8,
   cell_width = 1.1,
-  line_height = 1.0,
+  line_height = 1.05,
   freetype_load_target = 'Normal',
   freetype_render_target = 'HorizontalLcd',
   -- harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' },

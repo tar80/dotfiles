@@ -36,6 +36,7 @@ return {
       javascript = { 'biome-check' },
       typescript = { 'biome-check' },
       markdown = { 'markdownlint', 'prettier' },
+      yaml = { 'prettier' },
     },
   },
 }

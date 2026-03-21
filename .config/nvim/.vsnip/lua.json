@@ -15,6 +15,14 @@
     "prefix": "it",
     "body": ["it('$1', function()", "\t$2", "end)"]
   },
+  "Busted before_each": {
+    "prefix": "before_each",
+    "body": ["before_each(function()", "\t$1", "end)"]
+  },
+  "Busted after_each": {
+    "prefix": "after_each",
+    "body": ["after_each(function()", "\t$1", "end)"]
+  },
   "Print": {
     "prefix": {
       "prefix": "pr",

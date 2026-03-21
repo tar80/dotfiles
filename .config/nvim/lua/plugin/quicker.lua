@@ -6,6 +6,10 @@ return {
   ft = { 'qf' },
   config = {
     use_default_opts = true,
+    keys = {
+      { '>', "<cmd>lua require('quicker').expand()<CR>", desc = 'Expand quickfix content' },
+      { '<', "<cmd>lua require('quicker').collapse()<CR>", desc = 'Collapse quickfix content' },
+    },
     opts = {
       buflisted = false,
       number = true,

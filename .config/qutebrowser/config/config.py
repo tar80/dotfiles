@@ -1657,6 +1657,7 @@ c.url.searchengines = {
         'g': 'https://www.google.co.jp/search?hl=ja&as_q={}',
         'de': 'https://www.deepl.com/ja/translator#en/ja/{}',
         'dj': 'https://www.deepl.com/ja/translator#ja/en/{}',
+        'w': 'https://ejje.weblio.jp/content/{}',
         'p': 'https://www.pixiv.net/tags/{}/artworks?s_mode=s_tag',
         'pu': 'https://www.pixiv.net/search_user.php?nick={}&s_mode=s_usr',
         'y': 'https://www.youtube.com/results?search_query={}',

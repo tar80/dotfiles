@@ -17,9 +17,9 @@ return {
     },
   },
   opts = {
-    enabled = function()
-      return not vim.g['skkeleton#enabled']
-    end,
+    -- enabled = function()
+    --   return not vim.g['skkeleton#enabled']
+    -- end,
     keymap = {
       preset = 'none',
       ['<C-e>'] = { 'cancel', 'fallback' },
@@ -305,7 +305,6 @@ return {
         treesitter_highlighting = true,
         show_documentation = false,
       },
-      file,
     },
     snippets = { preset = 'vsnip' },
     sources = {

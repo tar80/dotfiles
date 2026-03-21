@@ -182,8 +182,8 @@ api.nvim_create_autocmd('LspAttach', {
       keymap.set('n', 'gln', popup_rename, { desc = 'Lsp popup rename' })
     end
     if client:supports_method('textDocument/codeAction') then
-      local success, tiny_code_action = pcall(require, 'tiny-code-action')
-      if success then
+      local _, tiny_code_action = pcall(require, 'tiny-code-action')
+      if tiny_code_action.code_action then
         keymap.set({ 'n', 'x' }, 'gla', function()
           tiny_code_action.code_action()
         end, { noremap = true, silent = true, desc = 'Tiny code action' })
@@ -217,12 +217,10 @@ local enable_types = {
 --   root_markers = { '.git' },
 -- })
 
-vim.keymap.set({ 'i', 'n' }, '<F13>', function()
-  if vim.lsp.is_enabled('copilot_ls') then
-    vim.lsp.enable('copilot_ls', false)
-  else
-    vim.lsp.enable('copilot_ls')
-  end
+keymap.set({ 'i', 'n' }, '<F13>', function()
+  local enable = not lsp.is_enabled('copilot_ls')
+  lsp.enable('copilot_ls', enable)
+  vim.notify(('Copilot_ls -> %s'):format(enable), vim.log.levels.INFO, {})
 end, { desc = 'Copilot toggle' })
 
 lsp.enable(enable_types)

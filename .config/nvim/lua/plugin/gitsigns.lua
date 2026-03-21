@@ -80,7 +80,7 @@ return {
       })
       helper.buf_setmap(bufnr, { 'n', 'x' }, 'gsr', gs.undo_stage_hunk, { desc = 'Undo the hunk' })
       helper.buf_setmap(bufnr, 'n', 'gsR', gs.reset_buffer, { desc = 'Reset the buffer' })
-      helper.buf_setmap(bufnr, 'n', 'gsp', gs.preview_hunk, { desc = 'Preview the hunk' })
+      helper.buf_setmap(bufnr, 'n', 'gsp', gs.preview_hunk_inline, { desc = 'Preview the hunk' })
       helper.buf_setmap(bufnr, 'n', 'gsb', 'callback', {
         callback = function()
           gs.blame_line({ full = true })

@@ -44,6 +44,14 @@ keymap.del('n', 'grr')
 -- keymap.del('n', 'grt')
 -- keymap.del('n', 'gO')
 
+keymap.set({ 'n' }, 'gx', function()
+  for _, url in ipairs(require('vim.ui')._get_urls()) do
+    local _, err = vim.ui.open(url, { cmd = { 'qutebrowser' } })
+    if err then
+      vim.notify(err, vim.log.levels.ERROR)
+    end
+  end
+end)
 ---Operator mode{{{2
 keymap.set({ 'o', 'x' }, 'iq', 'iW')
 keymap.set({ 'o', 'x' }, 'aq', 'aW')

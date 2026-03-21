@@ -59,13 +59,6 @@ M.normalize = function(path)
   return vim.fs.normalize(path)
 end
 
----Get project root path
----@param path string
----@param markers string[]
--- M.get_project_root = function(path, markers)
---   return vim.fs.root(path, markers) or vim.uv.cwd()
--- end
-
 ---Get the executable file path under scoop management
 ---@param path string
 ---@return string
@@ -103,7 +96,7 @@ end
 
 ---Measure the time it takes to start vim
 M.measure_startup = function()
-  if fn.has('vim_starting') then
+  if fn.has('vim_starting') == 1 then
     local pre = fn.reltime()
     local augroup = api.nvim_create_augroup('rc_helper', {})
     api.nvim_create_autocmd('UIEnter', {
@@ -163,7 +156,7 @@ M.optimize_env_path = function(remove) -- {{{
 end -- }}}
 
 ---Set the specified shell environment
----@param name string Specify the shell name
+---@param name "cmd"|"nyagos"|"bash" Specify the shell name
 M.shell = function(name) -- {{{
   local obj = {
     cmd = { path = 'cmd.exe', flag = '/c', pipe = '>%s 2>&1', quote = '', xquote = '"', slash = false },
@@ -187,16 +180,35 @@ M.shell = function(name) -- {{{
     },
   }
   local cui = obj[name]
-  local set = function(key, value)
+
+  if not cui then
+    return
+  end
+
+  local opts = {
+    shell = cui.path,
+    shellcmdflag = cui.flag,
+    shellpipe = cui.pipe,
+    shellquote = cui.quote,
+    shellxquote = cui.xquote,
+    shellslash = cui.slash,
+    completeslash = cui.completeslash,
+  }
+
+  for key, value in pairs(opts) do
     api.nvim_set_option_value(key, value, { scope = 'global' })
   end
-  set('shell', cui.path)
-  set('shellcmdflag', cui.flag)
-  set('shellpipe', cui.pipe)
-  set('shellquote', cui.quote)
-  set('shellxquote', cui.xquote)
-  set('shellslash', cui.slash)
-  set('completeslash', cui.completeslash)
+
+  -- local set = function(key, value)
+  --   api.nvim_set_option_value(key, value, { scope = 'global' })
+  -- end
+  -- set('shell', cui.path)
+  -- set('shellcmdflag', cui.flag)
+  -- set('shellpipe', cui.pipe)
+  -- set('shellquote', cui.quote)
+  -- set('shellxquote', cui.xquote)
+  -- set('shellslash', cui.slash)
+  -- set('completeslash', cui.completeslash)
 end -- }}}
 
 ---Create new scratch buffer
@@ -271,41 +283,49 @@ M.search_star = function(has_g, is_visual)
 end
 
 --- This code was copied from snacks.debug.
----@param max_lines integer
----@param ... unknown
----@return string, string
-function M.inspect(max_lines, ...) -- {{{2
-  local obj = { ... } ---@type unknown[]
+local function _traceback_info() -- {{{2
   local caller = debug.getinfo(1, 'S')
-  for level = 3, 10 do
-    local info = debug.getinfo(level, 'S')
+  ---@cast caller debuglib.DebugInfo
+  for level = 2, 10 do
+    local getinfo = debug.getinfo(level, 'S')
     if
-      info
-      and info.source ~= caller.source
-      and info.what ~= 'C'
-      and info.source ~= 'lua'
-      and info.source ~= '@' .. (os.getenv('MYVIMRC') or '')
+      getinfo
+      and getinfo.source ~= caller.source
+      and getinfo.what ~= 'C'
+      and getinfo.source ~= 'lua'
+      and getinfo.source ~= '@' .. (os.getenv('MYVIMRC') or '')
     then
-      caller = info
+      caller = getinfo
       break
     end
   end
   local dirname = vim.fs.dirname(caller.source):gsub('^.*/', '')
   local basename = vim.fs.basename(caller.source)
-  local info = ('[%s]%s:%s'):format(dirname, basename, caller.linedefined)
-  -- local info = fn.fnamemodify(caller.source:sub(2), ':t') .. ':' .. caller.linedefined
-  if ... == nil then
-    return info, 'nil'
+  return ('%s/%s:%s'):format(dirname, basename, caller.linedefined)
+end -- }}}2
+
+--- This code was copied from snacks.debug.
+---@param trace boolean
+---@param max_lines integer
+---@param ... unknown
+---@return string, string
+function M.inspect(trace, max_lines, ...) -- {{{2
+  local info = trace and _traceback_info() or 'Returns'
+  local ret = ''
+
+  if select('#', ...) == 1 and type(...) == 'function' then
+    ret = ...
+  else
+    local lines = vim.split(vim.inspect({ ... }), '\\n')
+    if #lines > max_lines then
+      local c = #lines
+      lines = vim.list_slice(lines, 1, max_lines)
+      table.insert(lines, ('%s more lines left.'):format(c - max_lines))
+    end
+    ret = table.concat(lines, '\n'):sub(2, -2)
   end
-  local lines = vim.split(vim.inspect(obj), '\\n')
-  if #lines > max_lines then
-    local c = #lines
-    lines = vim.list_slice(lines, 1, max_lines)
-    lines[#lines + 1] = (c - max_lines) .. ' more lines have been truncated...'
-  end
-  local msg = table.concat(lines, '\n')
-  msg = vim.trim(msg):sub(2, -2)
-  return info, msg
+
+  return info, ret
 end -- }}}2
 
 --[[
@@ -346,9 +366,9 @@ function M.toggle_wrap() -- {{{2
   local wrap = not vim.wo.wrap
   vim.wo.wrap = wrap
   if vim.wo.diff == true then
-    vim.iter(vim.api.nvim_list_wins()):each(function(winid)
-      if vim.api.nvim_win_is_valid(winid) then
-        if vim.api.nvim_get_option_value('diff', { win = winid }) then
+    vim.iter(api.nvim_list_wins()):each(function(winid)
+      if api.nvim_win_is_valid(winid) then
+        if api.nvim_get_option_value('diff', { win = winid }) then
           api.nvim_set_option_value('wrap', wrap, { win = winid })
         end
       end

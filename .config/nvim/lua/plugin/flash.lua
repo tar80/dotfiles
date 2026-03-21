@@ -166,8 +166,9 @@ return {
     {
       '<Space>',
       mode = { 'x', 'o' },
-      function()
-        if type(vim.treesitter.get_node()) == 'userdata' then
+      function( )
+        local node = vim.treesitter.get_node()
+        if node and type(node) == 'userdata' then
           require('flash').treesitter()
         end
       end,

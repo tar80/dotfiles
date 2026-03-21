@@ -113,6 +113,7 @@ return { -- {{{2
           sauce.testmode({
             localleader = '\\',
             test_key = '<LocalLeader><LocalLeader>',
+            abort_key = '<LocalLeader>q',
           })
         end,
       })
@@ -220,12 +221,12 @@ return { -- {{{2
     dev = true,
     keys = { 'f', 'F', 't', 'T', 'd', 'v', 'V', 'y', 'c', '\x16' },
     opts = {
-      fret_enable_beacon = true,
+      fret_enable_beacon = false,
       fret_enable_kana = true,
       fret_enable_symbol = true,
       fret_repeat_notify = false,
       fret_smart_fold = true,
-      fret_multi_label = {filler = ' ', position = 'after'},
+      fret_multi_label = { filler = ' ', position = 'after' },
       fret_timeout = 9000,
       fret_samekey_chain = true,
       -- beacon_opts = { hl = 'LazyButtonActive', interval = 80, blend = 30, decay = 15 },
@@ -294,6 +295,7 @@ return { -- {{{2
         { buns = { '【', '】' }, input = { ']' }, filetype = { 'markdown' } },
         { buns = { '${', '}' }, input = { '$' }, filetype = { 'typescript', 'javascript' } },
         { buns = { '%(', '%)' }, input = { '%' }, filetype = { 'typescript', 'javascript' } },
+        { buns = { '（', '）' }, action = { 'delete' } },
       })
       vim.g['sandwich#recipes'] = recipes
       vim.g['sandwich#magicchar#f#patterns'] = {

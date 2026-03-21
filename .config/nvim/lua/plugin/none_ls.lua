@@ -3,7 +3,7 @@
 
 return {
   'nvimtools/none-ls.nvim',
-  ft = { 'text', 'markdown' },
+  ft = { 'text', 'markdown', 'yaml' },
   dependencies = { 'williamboman/mason.nvim' },
   config = function()
     local null_ls = require('null-ls')
@@ -18,9 +18,6 @@ return {
           vim.lsp.buf.code_action({ apply = true, bufnr = bufnr })
         end, { desc = 'Lsp code action' })
       end,
-      -- should_attach = function(bufnr)
-      --   return not vim.api.nvim_buf_get_name(bufnr):find('futago://chat', 1, true)
-      -- end,
       sources = {
         null_ls.builtins.diagnostics.markdownlint.with({
           filetypes = { 'markdown' },
@@ -48,6 +45,16 @@ return {
         }),
         null_ls.builtins.code_actions.textlint.with({
           extra_args = { '--config', os.getenv('HOME') .. '/.textlintrc.json' },
+        }),
+        null_ls.builtins.diagnostics.actionlint.with({
+          filetypes = { 'yaml' },
+          diagnostic_config = {
+            virtual_text = {
+              format = function(diagnostic)
+                return string.format('%s: [%s] %s', diagnostic.source, diagnostic.code, diagnostic.message)
+              end,
+            },
+          },
         }),
       },
     })

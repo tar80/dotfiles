@@ -1,3 +1,4 @@
+-- workspace=$XDG_DATA_HOME\nvim-data\lazy\fidget.nvim\lua
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1
 
 return {
@@ -17,7 +18,7 @@ return {
     local notify = fidget.notification.notify
     ---@diagnostic disable-next-line: duplicate-set-field
     vim.print = function(...)
-      local info, lines = require('helper').inspect(500, ...)
+      local info, lines = require('helper').inspect(false, 2000, ...)
       local msg = ('[%s]\n%s'):format(info, lines)
       _fast_event_wrap(notify)(msg, vim.log.levels.INFO, {
         key = 'vim.print',
@@ -26,7 +27,8 @@ return {
       })
     end
     print = function(...)
-      local msg = tostring(...):gsub('\\n', '\n')
+      local info, lines = require('helper').inspect(true, 2000, ...)
+      local msg = ('[%s]\n%s'):format(info, lines)
       _fast_event_wrap(notify)(msg, vim.log.levels.INFO, {
         key = 'print',
         group = 'messages',
@@ -50,7 +52,7 @@ return {
       ignore = {
         function(msg)
           if
-            msg.title and msg.title:find('iagnos', 2, true)
+            msg and msg.title and msg.title:find('iagnos', 2, true)
             or msg.title:find('semantic', 2, true)
             or msg.title:find('completion', 2, true)
           then
