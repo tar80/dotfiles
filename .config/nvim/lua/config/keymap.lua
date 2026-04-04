@@ -35,15 +35,6 @@ local function ppcust_load() -- {{{2
 end
 
 ---@desc Keymaps {{{1
--- Unmap lsp-mappings {{{2
--- keymap.del('i', '<C-s>')
-keymap.del({ 'n', 'x' }, 'gra')
-keymap.del('n', 'gri')
-keymap.del('n', 'grn')
-keymap.del('n', 'grr')
--- keymap.del('n', 'grt')
--- keymap.del('n', 'gO')
-
 keymap.set({ 'n' }, 'gx', function()
   for _, url in ipairs(require('vim.ui')._get_urls()) do
     local _, err = vim.ui.open(url, { cmd = { 'qutebrowser' } })

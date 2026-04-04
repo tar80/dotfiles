@@ -286,7 +286,7 @@ end
 local function _traceback_info() -- {{{2
   local caller = debug.getinfo(1, 'S')
   ---@cast caller debuglib.DebugInfo
-  for level = 2, 10 do
+  for level = 4, 10 do
     local getinfo = debug.getinfo(level, 'S')
     if
       getinfo

@@ -4,7 +4,7 @@
 return {
   'folke/trouble.nvim',
   cmd = 'Trouble',
-  keys = { 'gle', 'glr' },
+  keys = { 'gle' },
   opts = function()
     local trouble_api = require('trouble.api')
     local helper = require('helper')
@@ -32,17 +32,17 @@ return {
               return
             end
           end
-          -- trouble_api.open('lsp_definitions')
-          trouble_api.open('lsp_references')
+          trouble_api.open('lsp_definitions')
+          -- trouble_api.open('lsp_references')
         end,
       })
     end, { desc = 'Trouble definitions' }) -- }}}
     vim.keymap.set('n', 'gle', function()
       trouble_api.toggle('diagnostics_buffer')
     end, { desc = 'Trouble diagnostics' })
-    vim.keymap.set('n', 'glr', function()
-      trouble_api.toggle('lsp_references')
-    end, { desc = 'Trouble references' })
+    -- vim.keymap.set('n', 'glr', function()
+    --   trouble_api.toggle('lsp_references')
+    -- end, { desc = 'Trouble references' })
 
     return { -- {{{1
       auto_close = false,

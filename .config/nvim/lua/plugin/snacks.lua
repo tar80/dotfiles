@@ -682,7 +682,7 @@ return {
           .option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
           :map('<Leader><Leader>c')
         Snacks.toggle.inlay_hints():map('gli')
-        Snacks.toggle.diagnostics():map('gld')
+        -- Snacks.toggle.diagnostics():map('gld')
       end,
     })
   end, -- }}}2
@@ -985,6 +985,13 @@ return {
         Snacks.picker.colorschemes()
       end,
       desc = 'Colorschemes',
+    },
+    {
+      'glr',
+      function()
+        Snacks.picker.lsp_references()
+      end,
+      desc = 'LSP References',
     },
     {
       'gls',

@@ -7,25 +7,24 @@ local keymap = vim.keymap
 ---@desc Auto-commands {{{1
 local augroup = api.nvim_create_augroup('config/command', {})
 
---NOTE: next_version
 ---Remove ignore history from cmdline history{{{2
 ---@see https://blog.atusy.net/2023/07/24/vim-clean-history/
--- local delete_history = vim.regex([=[^\c\(mes\%[sages]\|h\%[elp]\)\_.*$]=])
--- vim.api.nvim_create_autocmd('CmdlineLeavePre', {
---   desc = 'Remove ignore history',
---   pattern = ':',
---   group = augroup,
---   callback = function()
---     vim.schedule(function()
---       for i = 1, 2 do
---         local text = fn.histget(':', -i)
---         if text ~= '' and #text < 7 or delete_history:match_str(text) then
---           fn.histdel(':', -i)
---         end
---       end
---     end)
---   end,
--- })
+local delete_history = vim.regex([=[^\(mes\%[sages]\|he\%[lp]\)\_.*$]=])
+vim.api.nvim_create_autocmd('CmdlineLeavePre', {
+  desc = 'Remove ignore history',
+  pattern = ':',
+  group = augroup,
+  callback = function()
+    vim.schedule(function()
+      for i = 1, 2 do
+        local text = vim.fn.histget(':', -i)
+        if text ~= '' and (#text < 2 or delete_history:match_str(text)) then
+          vim.fn.histdel(':', -i)
+        end
+      end
+    end)
+  end,
+})
 
 --Disable ime {{{2
 local zenhan = require('helper').scoop_apps('apps/zenhan/current/zenhan.exe')

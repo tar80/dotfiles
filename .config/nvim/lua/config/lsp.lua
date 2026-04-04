@@ -1,11 +1,5 @@
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1
 --------------------------------------------------------------------------------
----@class Severities
----@field Error string
----@field Warn string
----@field Hint string
----@field Info string
-
 local api = vim.api
 local lsp = vim.lsp
 local keymap = vim.keymap
@@ -15,7 +9,20 @@ local icon = require('tartar.icon.symbol')
 local UNIQUE_NAME = 'rc_lsp'
 local RENAME_TITLE = 'LspRename'
 -- local FLOAT_BORDER = vim.g.float_border
----@type Severities
+
+local enable_types = {
+  'denols',
+  'lua_ls',
+  -- 'emmylua_ls',
+  'jsonls',
+  'ts_ls',
+}
+
+---@class Severities
+---@field Error string
+---@field Warn string
+---@field Hint string
+---@field Info string
 local SEVERITIES = icon.diagnostics
 
 local augroup = api.nvim_create_augroup(UNIQUE_NAME, {})
@@ -133,45 +140,24 @@ local float_opts = {
   anchor_bias = 'below',
 }
 
+local _require = setmetatable({}, {
+  __index = function(t, k)
+    local ok, mod = pcall(require, k)
+    if ok then
+      t[k] = mod
+      return mod
+    end
+    return nil
+  end,
+})
+
 api.nvim_create_autocmd('LspAttach', {
   group = augroup,
   callback = function(args)
     local client = assert(lsp.get_client_by_id(args.data.client_id))
-    -- local capa = client.server_capabilities
+
     pcall(keymap.del, 'n', 'K', { buffer = args.buf })
 
-    keymap.set('n', '[d', function()
-      vim.diagnostic.jump({ count = -vim.v.count1, float = true })
-    end, { desc = 'Jump to the previous diagnostic in the current buffer' })
-    keymap.set('n', ']d', function()
-      vim.diagnostic.jump({ count = vim.v.count1, float = true })
-    end, { desc = 'Jump to the next diagnostic in the current buffer' })
-    vim.keymap.set('n', ']D', function()
-      vim.diagnostic.jump({ count = vim._maxint, float = true })
-    end, { desc = 'Jump to the last diagnostic in the current buffer' })
-    vim.keymap.set('n', '[D', function()
-      vim.diagnostic.jump({ count = -vim._maxint, float = true })
-    end, { desc = 'Jump to the first diagnostic in the current buffer' })
-
-    keymap.set('n', 'gld', function() -- {{{
-      local opts = { bufnr = 0, focusable = false }
-      local opts_cursor = vim.tbl_extend('force', opts, { scope = 'cursor' })
-      local winblend = api.nvim_get_option_value('winblend', {})
-      api.nvim_set_option_value('winblend', 0, {})
-      local resp = vim.diagnostic.open_float(opts_cursor, {})
-      if not resp then
-        local opts_line = vim.tbl_extend('force', opts, { scope = 'line' })
-        vim.diagnostic.open_float(opts_line, {})
-      end
-
-      api.nvim_set_option_value('winblend', winblend, {})
-    end, { desc = 'Lsp diagnostic' }) -- }}}
-    keymap.set('n', 'glh', function()
-      lsp.buf.signature_help(float_opts)
-    end, { desc = 'Lsp signature help' })
-    keymap.set('n', 'gll', function()
-      lsp.buf.hover(float_opts)
-    end, { desc = 'Lsp hover' })
     if client:supports_method('textDocument/inlayHint') then
       keymap.set('n', 'gli', function() -- {{{
         local toggle = not lsp.inlay_hint.is_enabled({ bufnr = args.buf })
@@ -182,7 +168,7 @@ api.nvim_create_autocmd('LspAttach', {
       keymap.set('n', 'gln', popup_rename, { desc = 'Lsp popup rename' })
     end
     if client:supports_method('textDocument/codeAction') then
-      local _, tiny_code_action = pcall(require, 'tiny-code-action')
+      local tiny_code_action = _require['tiny-code-action']
       if tiny_code_action.code_action then
         keymap.set({ 'n', 'x' }, 'gla', function()
           tiny_code_action.code_action()
@@ -191,20 +177,8 @@ api.nvim_create_autocmd('LspAttach', {
         keymap.set('n', 'gla', lsp.buf.code_action, { desc = 'Lsp code action' })
       end
     end
-    keymap.set('n', 'glv', function() -- {{{
-      local toggle = not vim.diagnostic.config().virtual_lines
-      vim.diagnostic.config({ virtual_lines = toggle })
-    end, { desc = 'Lsp virtual lines' }) -- }}}
   end,
 })
-
-local enable_types = {
-  'denols',
-  'lua_ls',
-  -- 'emmylua_ls',
-  'jsonls',
-  'ts_ls',
-}
 
 -- vim.lsp.config('*', {
 --   capabilities = {
@@ -217,10 +191,63 @@ local enable_types = {
 --   root_markers = { '.git' },
 -- })
 
+-- {{{ Keymaps
+-- Unmap lsp-mappings {{{2
+keymap.del('i', '<C-s>')
+keymap.del({ 'n', 'x' }, 'gra')
+keymap.del('n', 'gri')
+keymap.del('n', 'grn')
+keymap.del('n', 'grr')
+keymap.del('n', 'grt')
+keymap.del('n', 'grx')
+-- keymap.del('n', 'gO')
+
 keymap.set({ 'i', 'n' }, '<F13>', function()
   local enable = not lsp.is_enabled('copilot_ls')
   lsp.enable('copilot_ls', enable)
   vim.notify(('Copilot_ls -> %s'):format(enable), vim.log.levels.INFO, {})
 end, { desc = 'Copilot toggle' })
+
+keymap.set('n', '[d', function()
+  vim.diagnostic.jxmp({ count = -vim.v.count1, float = true })
+end, { desc = 'Jump to the previous diagnostic in the current buffer' })
+keymap.set('n', ']d', function()
+  vim.diagnostic.jump({ count = vim.v.count1, float = true })
+end, { desc = 'Jump to the next diagnostic in the current buffer' })
+--
+keymap.set('n', ']D', function()
+  vim.diagnostic.jump({ count = vim._maxint, wrap = false, float = true })
+end, { desc = 'Jump to the last diagnostic in the current buffer' })
+keymap.set('n', '[D', function()
+  vim.diagnostic.jump({ count = -vim._maxint, wrap = false, float = true })
+end, { desc = 'Jump to the first diagnostic in the current buffer' })
+
+keymap.set('n', 'gld', function()
+  local opts = { bufnr = 0, wrap = false, focusable = false }
+  local opts_cursor = vim.tbl_extend('force', opts, { scope = 'cursor' })
+  local winblend = api.nvim_get_option_value('winblend', {})
+  api.nvim_set_option_value('winblend', 0, {})
+  local resp = vim.diagnostic.open_float(opts_cursor, {})
+  if not resp then
+    local opts_line = vim.tbl_extend('force', opts, { scope = 'line' })
+    vim.diagnostic.open_float(opts_line, {})
+  end
+
+  api.nvim_set_option_value('winblend', winblend, {})
+end, { desc = 'Lsp diagnostic' })
+
+keymap.set('n', 'glh', function()
+  lsp.buf.signature_help(float_opts)
+end, { desc = 'Lsp signature help' })
+
+keymap.set('n', 'gll', function()
+  lsp.buf.hover(float_opts)
+end, { desc = 'Lsp hover' })
+
+keymap.set('n', 'glv', function()
+  local toggle = not vim.diagnostic.config().virtual_lines
+  vim.diagnostic.config({ virtual_lines = toggle })
+end, { desc = 'Lsp virtual lines' })
+-- }}}
 
 lsp.enable(enable_types)

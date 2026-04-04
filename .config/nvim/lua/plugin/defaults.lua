@@ -113,12 +113,12 @@ return { -- {{{2
           sauce.testmode({
             localleader = '\\',
             test_key = '<LocalLeader><LocalLeader>',
-            abort_key = '<LocalLeader>q',
+            abort_mode_key = '<LocalLeader>q',
           })
         end,
       })
     end, -- }}}4
-    config = true,
+    config = false,
   }, -- }}}3
   { 'folke/ts-comments.nvim', event = 'VeryLazy', opts = {} },
 
@@ -240,8 +240,8 @@ return { -- {{{2
     init = function()
       vim.keymap.set({ 'o', 'x' }, 'i%', '<Plug>(matchwith-operator-i)')
       vim.keymap.set({ 'o', 'x' }, 'a%', '<Plug>(matchwith-operator-a)')
-      vim.keymap.set({ 'o', 'x' }, 'iP', '<Plug>(matchwith-operator-parent-i)')
-      vim.keymap.set({ 'o', 'x' }, 'aP', '<Plug>(matchwith-operator-parent-a)')
+      -- vim.keymap.set({ 'o', 'x' }, 'iP', '<Plug>(matchwith-operator-parent-i)')
+      -- vim.keymap.set({ 'o', 'x' }, 'aP', '<Plug>(matchwith-operator-parent-a)')
     end,
     opts = {
       -- captures = {

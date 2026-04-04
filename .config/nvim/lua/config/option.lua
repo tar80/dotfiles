@@ -24,9 +24,7 @@ o.fileencodings = 'utf-8,cp932,euc-jp,utf-16le'
 -- o.timeoutlen = 1000
 o.updatetime = vim.g.update_time
 -- o.autochdir = true
-o.diffopt =
-  'algorithm:histogram,closeoff,filler,hiddenoff,indent-heuristic,internal,iwhite,iwhiteeol,linematch:40,vertical'
---version 0.12 or later: o.diffopt = 'algorithm:histogram,closeoff,filler,hiddenoff,indent-heuristic,internal,iwhite,iwhiteeol,linematch:40,vertical,inline:word'
+o.diffopt = 'algorithm:histogram,closeoff,filler,hiddenoff,indent-heuristic,internal,iwhite,iwhiteeol,linematch:40,vertical,inline:word'
 -- o.backup= false
 o.swapfile = false
 o.undofile = true

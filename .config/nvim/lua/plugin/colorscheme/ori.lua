@@ -1,6 +1,6 @@
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1:
 
-local light_theme = 'muted'
+local light_theme = 'light'
 local dark_theme = 'mallow'
 local transparent = {}
 
@@ -56,16 +56,22 @@ return {
         return tr and {}
           or {
             light = {
+              -- ['@comment.documentation'] = { style = 'dim,italic' },
+              FidgetInfo = { fg = colors.olive, style = 'blink' },
               MsgArea = { bg = '#F2F0EE' },
-              CursorLineHold = { fg = 'NONE', bg = '#FDE3DD' },
-              BlinkCmpSignatureHelp = { bg = colors.shade_cyan },
-              BlinkCmpSignatureHelpBorder = { fg = colors.shade_cyan },
+              CursorLineHold = { bg = '#FDE3DD' },
+              BlinkCmpSignatureHelpActiveParameter = { sp = colors.high_cyan, style = 'underline,bold'},
+              BlinkCmpSignatureHelp = { bg = colors.selection },
+              BlinkCmpSignatureHelpBorder = { fg = colors.selection },
               -- BlinkCmpDoc = { fg = colors.fg, bg = colors.shade_blue },
               -- BlinkCmpDocSeparator = { fg = colors.gray, bg = colors.shade_blue },
             },
             dark = {
+              -- ['@comment.documentation'] = { style = 'dim,italic' },
+              FidgetInfo = { fg = colors.olive, style = 'blink' },
               MsgArea = { bg = '#102025' },
-              CursorLineHold = { fg = 'NONE', bg = '#3E1D31' },
+              CursorLineHold = { bg = '#3E1D31' },
+              BlinkCmpSignatureHelpActiveParameter = { sp = colors.high_cyan, style = 'underline,bold'},
               BlinkCmpSignatureHelp = { bg = colors.shade_cyan },
               BlinkCmpSignatureHelpBorder = { fg = colors.shade_cyan },
               -- BlinkCmpDoc = { fg = colors.fg, bg = colors.shade_blue },
@@ -87,12 +93,11 @@ return {
         matchwith = true,
         mini_diff = true,
         mini_icons = true,
-        -- nvim_treesitter = true,
         render_markdown = true,
         rereope = true,
         sandwich = true,
-        skkeleton_henkan_highlight = true,
-        skkeleton_indicator = false,
+        -- skkeleton_henkan_highlight = true,
+        -- skkeleton_indicator = false,
         snacks = true,
         staba = true,
         trouble = true,

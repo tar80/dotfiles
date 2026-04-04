@@ -1,8 +1,9 @@
 local helper = require('tartar.helper')
 local bubble = require('tartar.icon.ui').frame.bubble
+local slant = require('tartar.icon.ui').frame.slant_u
 local kind_icons = require('tartar.icon.kind')
 local quote_border = helper.generate_quotation('PmenuMatch')
-local bubble_border = helper.generate_decorative_line(bubble.left, bubble.right, 'BlinkCmpSignatureHelpBorder')
+local bubble_border = helper.generate_decorative_line(slant.left, slant.right, 'BlinkCmpSignatureHelpBorder')
 
 return {
   'saghen/blink.cmp',
@@ -155,7 +156,7 @@ return {
         min_width = 20,
         max_height = 10,
         border = 'none',
-        winblend = 10,
+        winblend = 5,
         winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
         scrolloff = 2,
         scrollbar = true,
@@ -321,13 +322,13 @@ return {
         copilot = {
           name = 'copilot',
           module = 'blink-copilot',
-          score_offset = -100,
+          -- score_offset = -100,
           async = true,
           opts = {
             max_completions = 2,
             max_attempts = 3,
             debounce = 100, ---@type integer | false
-            auto_refresh = { backward = false, forward = true },
+            auto_refresh = { backward = true, forward = true },
           },
         },
       },

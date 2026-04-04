@@ -63,6 +63,7 @@ return {
       },
       diagnostics = {
         enable = true,
+        disable = { 'unused-function' },
         globals = { 'vim', 'nyagos', 'describe', 'before_each', 'after_each', 'setup', 'teardown', 'it', 'Snacks' },
       },
       format = { enable = false },
