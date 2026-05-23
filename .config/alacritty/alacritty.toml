@@ -50,6 +50,7 @@ regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:
 
 [keyboard]
 bindings = [
+  { key = "Insert", mods = "Shift", action = "Paste" },
   { key = "q", mods = "Control|Shift", action = "Quit" },
   { key = "n", mods = "Control|Shift", action = "SpawnNewInstance" },
   { key = "ArrowUp", mods = "Control", action = "ScrollLineUp" },

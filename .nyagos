@@ -1,6 +1,7 @@
 ---@desc constants
 local THEME_NAME = 'Catppuccin Macchiato'
 local REPO_ROOT = 'D:/Repos'
+local DEV_ROOT = 'D:/Dev'
 local MY_REPO = string.format('%s/tar80', REPO_ROOT)
 local SCOOP_ROOT = nyagos.env.scoop:gsub('\\', '/')
 
@@ -226,6 +227,15 @@ nyagos.alias.ppm = function()
   end
 end
 
+nyagos.alias.dev = function()
+  local repo = string.format('%s/nvim', DEV_ROOT)
+  local path = nyagos.eval(string.format('fd -Lt d -c never -E node_modules -E .git --full-path . %s|%s', repo, fzf.cmd))
+  if path ~= '' then
+    nyagos.exec(string.format('cd %s', path))
+    nyagos.exec(string.format('zoxide add %s', path))
+  end
+end
+
 nyagos.alias.tar = function()
   local repo = string.format('%s/tar80', REPO_ROOT)
   local path = nyagos.eval(string.format('fd -Lt d -c never -E node_modules -E .git --full-path . %s|%s', repo, fzf.cmd))
@@ -306,7 +316,7 @@ end)
 nyagos.bindkey('M_H', function(this)
   local cmd = string.format('cd --history|%s', fzf.cmd)
   this:call('REPAINT_ON_NEWLINE')
-  return string.format('"%s"', nyagos.eval(cmd))
+  return string.format('cd "%s"', nyagos.eval(cmd))
 end)
 
 nyagos.bindkey('M_G', function()

@@ -15,9 +15,10 @@ return {
     { family = 'Segoe UI Emoji' },
   }),
   -- font_size = 12.3,
-  font_size = 13.8,
-  cell_width = 1.1,
-  line_height = 1.05,
+  font_size = 15.0,
+  -- font_size = 13.8,
+  cell_width = 1.02,
+  line_height = 1.02,
   freetype_load_target = 'Normal',
   freetype_render_target = 'HorizontalLcd',
   -- harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' },
@@ -26,7 +27,7 @@ return {
   bold_brightens_ansi_colors = false,
   custom_block_glyphs = true,
   use_cap_height_to_scale_fallback_fonts = true,
-  underline_position = -4,
+  underline_position = -5,
   -- underline_thickness = 1.0,
 
   ---@desc general
