@@ -138,49 +138,7 @@ api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
----Supports changing options that affect diff {{{2
-local function _delete_diffmap(bufnr)
-  keymap.del('x', 'do', { buffer = bufnr })
-  keymap.del('x', 'dp', { buffer = bufnr })
-  keymap.del('x', 'dd', { buffer = bufnr })
-  keymap.del({ 'x', 'n' }, 'du', { buffer = bufnr })
-end
-api.nvim_create_autocmd('OptionSet', {
-  desc = 'Settings applied to diff buffers',
-  group = augroup,
-  pattern = { 'diff' },
-  callback = function(opts)
-    if not vim.api.nvim_buf_is_valid(opts.buf) then
-      return
-    end
-    if vim.wo.diff then
-      keymap.set({ 'n', 'x' }, 'du', '<Cmd>diffupdate<CR>', { buffer = opts.buf, desc = 'Update diff status' })
-      keymap.set('x', 'do', '<Cmd>diffget<CR>', { buffer = opts.buf, desc = 'Get selection diff' })
-      keymap.set('x', 'dp', '<Cmd>diffput<CR>', { buffer = opts.buf, desc = 'Put selection diff' })
-      keymap.set('x', 'dd', function()
-        if not vim.wo.diff and vim.fn.mapcheck('dd', 'x') ~= '' then
-          _delete_diffmap(opts.buf)
-          return 'dd'
-        end
-        return 'd'
-      end, { buffer = opts.buf, expr = true, desc = 'Delete selection range' })
-    elseif vim.fn.mapcheck('dd', 'x') ~= '' then
-      _delete_diffmap(opts.buf)
-    end
-  end,
-})
-
 ---@desc User-commands {{{1
-api.nvim_create_user_command('BustedThisFile', function() -- {{{2
-  local rgx = vim.regex([[\(_spec\)\?\.lua$]])
-  local path = string.gsub(vim.fn.expand('%'), '\\', '/')
-  path = string.format('%s_spec.lua', path:sub(1, rgx:match_str(path)))
-  vim.cmd.PlenaryBustedFile(path)
-end, {})
-
----@desc "Z <filepath>" zoxide query
--- api.nvim_create_user_command('Z', 'execute "lcd " . system("zoxide query " . <q-args>)', { nargs = 1 })
-
 ---@desc Jest compose multi-panel
 ---@type string
 local pane_id

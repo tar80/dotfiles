@@ -16,6 +16,7 @@ local enable_types = {
   -- 'emmylua_ls',
   'jsonls',
   'ts_ls',
+  'taplo',
 }
 
 ---@class Severities
@@ -26,6 +27,9 @@ local enable_types = {
 local SEVERITIES = icon.diagnostics
 
 local augroup = api.nvim_create_augroup(UNIQUE_NAME, {})
+
+--Prevent K from being overwritten due to an unwanted LSP specification
+keymap.set('n', 'K', 'K', { noremap = true, desc = "Restore default K behavior" })
 
 ---Renames all references to the symbol under the cursor {{{2
 local function popup_rename()
@@ -68,15 +72,15 @@ end -- }}}
 ---@param bufnr integer
 ---@return integer
 local function cursorword(_client, bufnr)
-  local ts = require('tartar.treesitter')
-  local tartar_helper = require('tartar.helper')
+  local ts = require('tartar.lib.treesitter')
+  local is_insert_mode = require('tartar.lib.common').is_insert_mode
   local lsp_reference_ns = api.nvim_get_namespaces()['nvim.lsp.references']
   return api.nvim_create_autocmd({ 'CursorHold' }, {
     desc = 'Set document highlighting',
     group = augroup,
     buffer = bufnr,
     callback = function()
-      if tartar_helper.is_insert_mode() then
+      if is_insert_mode() then
         return
       end
       local cur = api.nvim_win_get_cursor(0)
@@ -136,7 +140,7 @@ vim.diagnostic.config({ -- {{{2
 local float_opts = {
   max_width = 80,
   wrap_at = 80,
-  border = require('tartar.helper').generate_quotation(),
+  border = require('tartar.lib.common').generate_quotation(),
   anchor_bias = 'below',
 }
 
@@ -155,9 +159,6 @@ api.nvim_create_autocmd('LspAttach', {
   group = augroup,
   callback = function(args)
     local client = assert(lsp.get_client_by_id(args.data.client_id))
-
-    pcall(keymap.del, 'n', 'K', { buffer = args.buf })
-
     if client:supports_method('textDocument/inlayHint') then
       keymap.set('n', 'gli', function() -- {{{
         local toggle = not lsp.inlay_hint.is_enabled({ bufnr = args.buf })
@@ -209,7 +210,7 @@ keymap.set({ 'i', 'n' }, '<F13>', function()
 end, { desc = 'Copilot toggle' })
 
 keymap.set('n', '[d', function()
-  vim.diagnostic.jxmp({ count = -vim.v.count1, float = true })
+  vim.diagnostic.jump({ count = -vim.v.count1, float = true })
 end, { desc = 'Jump to the previous diagnostic in the current buffer' })
 keymap.set('n', ']d', function()
   vim.diagnostic.jump({ count = vim.v.count1, float = true })

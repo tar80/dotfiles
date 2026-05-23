@@ -7,6 +7,10 @@
     "prefix": "to",
     "body": "$1 and $2 or $3"
   },
+  "Ingore stylua": {
+    "prefix": "is",
+    "body": "--stylua: ignore start\n--stylua: ignore end"
+  },
   "Busted describe": {
     "prefix": "desc",
     "body": ["describe(\"$1\", function()", "\tit(\"$2\", function()", "\t\t$3", "\tend)", "end)"]

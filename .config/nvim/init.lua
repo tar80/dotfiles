@@ -1,12 +1,13 @@
 local helper = require('helper')
+local sep = jit.os == 'Windows' and ';' or ':'
 
 do
   local node_modules = ('%s/node_modules/.bin'):format(vim.fn.stdpath('config'))
-  local sep = jit.os == 'Windows' and ';' or ':'
   vim.env.PATH = ('%s%s%s'):format(vim.env.PATH, sep, node_modules)
   vim.env.MYVIMRC = vim.uv.fs_realpath(os.getenv('MYVIMRC'))
   vim.env.CC = 'gcc'
-  vim.g.dev = 'D:/Dev/nvim'
+  vim.env.SSH_AUTH_SOCK = nil
+  vim.g.dev = 'X:/nvim'
   vim.g.repo = 'D:/Repos/tar80'
   vim.g.colors_name = 'ori'
   vim.g.update_time = 500
@@ -25,6 +26,19 @@ vim.g.start_level = nil
 if level == 'minimal' then
   helper.unload_presets()
   require('config._minimal')
+  local vcs_init = vim.g.dev .. '/vcs-init.nvim'
+  vim.opt.runtimepath:append(vcs_init)
+  require('vcs-init').setup({
+    disable_builtins = { enable = false },
+    diffmaps = { enable = false },
+    jjdiff = {
+      enable = true,
+      -- previewer_height = 25,
+      -- previewer_direction = 'below',
+      -- diff_options = { algorithm = 'histogram', linematch = 60 },
+    },
+    colorscheme = { enable = false },
+  })
 elseif level == 'test' then
   helper.shell('bash')
   -- vim.opt.rtp:prepend(vim.g.dev .. '/tartar.nvim')

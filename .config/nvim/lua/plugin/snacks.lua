@@ -9,6 +9,7 @@ local EXCLUED_FILES = {
   '.bundle',
   '.gems',
   '.obsidian',
+  '.jj',
   '.trash',
   'dist',
   'node_modules',
@@ -25,9 +26,10 @@ local bigfile_opts = { -- {{{2
   -- Enable or disable features when big file detected
   ---@param ctx {buf: integer, ft:string}
   setup = function(ctx)
-    if vim.fn.exists(':NoMatchParen') ~= 0 then
-      vim.cmd('NoMatchParen')
-    end
+    pcall(vim.cmd, 'NoMatchParen')
+    -- if vim.fn.exists(':NoMatchParen') ~= 0 then
+    --   vim.cmd('NoMatchParen')
+    -- end
     Snacks.util.wo(0, { foldmethod = 'manual', statuscolumn = '', conceallevel = 0 })
     vim.schedule(function()
       if vim.api.nvim_buf_is_valid(ctx.buf) then
@@ -655,7 +657,7 @@ return {
             to = vim.fs.joinpath(dir_path, opts.args),
           })
         end, { nargs = '?', desc = 'Rename File' })
-        -- local _fast_event_wrap = require('tartar.helper').fast_event_wrap
+        -- local _fast_event_wrap = require('tartar.common').fast_event_wrap
         -- local notify = Snacks.notifier.notify
         ---@diagnostic disable: duplicate-set-field
         -- vim.print = function(...)
@@ -760,38 +762,38 @@ return {
       end,
       desc = 'Files',
     },
-    {
-      '<Leader>z',
-      function()
-        Snacks.picker.zoxide()
-      end,
-      desc = 'Zoxide',
-    },
     -- {
     --   '<Leader>z',
     --   function()
-    --     local opts = {
-    --       prompt = 'zoxide query: ',
-    --     }
-    --     vim.ui.input(opts, function(input)
-    --       if input and input ~= '' then
-    --         vim.system({ 'zoxide', 'add', input }, { text = true })
-    --         vim.system({ 'zoxide', 'query', input }, { text = true }, function(data)
-    --           vim.schedule(function()
-    --             if data.code == 0 and data.stdout then
-    --               Snacks.picker.explorer({
-    --                 cwd = data.stdout:gsub('\n', ''),
-    --               })
-    --             else
-    --               vim.notify('zoxide: no match found', 3)
-    --             end
-    --           end)
-    --         end)
-    --       end
-    --     end)
+    --     Snacks.picker.zoxide()
     --   end,
     --   desc = 'Zoxide',
     -- },
+    {
+      '<Leader>z',
+      function()
+        local opts = {
+          prompt = 'zoxide query: ',
+        }
+        vim.ui.input(opts, function(input)
+          if input and input ~= '' then
+            vim.system({ 'zoxide', 'add', input }, { text = true })
+            vim.system({ 'zoxide', 'query', input }, { text = true }, function(data)
+              vim.schedule(function()
+                if data.code == 0 and data.stdout then
+                  Snacks.picker.explorer({
+                    cwd = data.stdout:gsub('\n', ''),
+                  })
+                else
+                  vim.notify('zoxide: no match found', 3)
+                end
+              end)
+            end)
+          end
+        end)
+      end,
+      desc = 'Zoxide',
+    },
     {
       '<Leader>k',
       function()
@@ -921,7 +923,7 @@ return {
       desc = 'Registers normal-mode',
     },
     {
-      '<C-r>r',
+      '<C-r><C-r>',
       function()
         Snacks.picker.registers({
           confirm = function(picker, item)
@@ -929,13 +931,15 @@ return {
             vim.api.nvim_set_current_win(picker.finder.filter.current_win)
             if item then
               vim.api.nvim_paste(item.data, true, -1)
-              vim.api.nvim_input('a')
+              vim.schedule(function()
+                vim.cmd.startinsert({ bang = true })
+              end)
             end
           end,
         })
       end,
       desc = 'Registers insert-mode',
-      mode = { 'i' },
+      mode = { 'i', 't' },
     },
     {
       '<Leader>sa',
@@ -997,6 +1001,13 @@ return {
       'gls',
       function()
         Snacks.picker.lsp_symbols()
+      end,
+      desc = 'LSP Symbols',
+    },
+    {
+      'glt',
+      function()
+        Snacks.picker.lsp_type_definitions()
       end,
       desc = 'LSP Symbols',
     },

@@ -22,7 +22,6 @@ local WORKSPACE_LIBRARIES = {
 local TEST_LIBRARIES = {
   lazy_plugins .. '/plenary.nvim/lua/plenary/busted.lua',
   lazy_plugins .. '/plenary.nvim/lua/luassert',
-  -- lazy_plugins .. '/plenary.nvim/lua/plenary/_meta/_luassert.lua',
 }
 local rgx_ph = vim.regex('^' .. PLACE_HOLDER)
 local rgx_spec = vim.regex('_spec.lua$')
@@ -40,12 +39,6 @@ local function get_workspace()
       table.insert(library, path)
     end
   end
-
-  -- local root = vim.fs.normalize(vim.fs.root(bufname, '.git') .. '/lua',{win = true})
-
-  -- if vim.uv.fs_stat(root) then
-    -- table.insert(library, root)
-  -- end
   return library
 end
 

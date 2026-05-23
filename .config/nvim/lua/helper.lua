@@ -20,18 +20,11 @@ M.has_words_before = function()
   return col ~= 0 and api.nvim_buf_get_lines(0, row - 1, row, true)[1]:sub(col, col):match('%w') ~= nil
 end
 
----Feeds the specified key
----@param key string
----@param mode string
-M.feedkey = function(key, mode)
-  api.nvim_feedkeys(api.nvim_replace_termcodes(key, true, false, true), mode, false)
-end
-
 ---Replaces "<" in the string with "<lt>"
 ---@param v string
-M.replace_lt = function(v)
-  return v:gsub('<([%a-]+>)', '<lt>%1')
-end
+-- M.replace_lt = function(v)
+--   return v:gsub('<([%a-]+>)', '<lt>%1')
+-- end
 
 ---@param bufnr integer
 ---@param mode string|string[]
@@ -83,11 +76,14 @@ end
 
 ---Unload preset plugins
 M.unload_presets = function()
-  vim.g.loaded_2html_plugin = true
   vim.g.loaded_gzip = true
-  vim.g.loaded_matchit = true
-  vim.g.loaded_matchparen = true
-  vim.g.loaded_netrwPlugin = true
+  vim.g.loaded_man = true
+  -- vim.g.loaded_matchit = true
+  -- vim.g.loaded_matchparen = true
+  -- vim.g.loaded_netrwPlugin = true
+  vim.g.loaded_nvim_net_plugin = true
+  vim.g.loaded_remote_plugins = true
+  vim.g.loaded_shada_plugin = true
   vim.g.loaded_spellfile_plugin = true
   vim.g.loaded_tarPlugin = true
   vim.g.loaded_tutor_mode_plugin = true
@@ -159,7 +155,14 @@ end -- }}}
 ---@param name "cmd"|"nyagos"|"bash" Specify the shell name
 M.shell = function(name) -- {{{
   local obj = {
-    cmd = { path = 'cmd.exe', flag = '/c', pipe = '>%s 2>&1', quote = '', xquote = '"', slash = false },
+    cmd = {
+      path = 'cmd.exe',
+      flag = '/c',
+      pipe = '>%s 2>&1',
+      quote = '',
+      xquote = '"',
+      slash = false,
+    },
     nyagos = {
       path = M.scoop_apps('apps/nyagos/current/nyagos.exe'),
       flag = '-c',
@@ -198,17 +201,6 @@ M.shell = function(name) -- {{{
   for key, value in pairs(opts) do
     api.nvim_set_option_value(key, value, { scope = 'global' })
   end
-
-  -- local set = function(key, value)
-  --   api.nvim_set_option_value(key, value, { scope = 'global' })
-  -- end
-  -- set('shell', cui.path)
-  -- set('shellcmdflag', cui.flag)
-  -- set('shellpipe', cui.pipe)
-  -- set('shellquote', cui.quote)
-  -- set('shellxquote', cui.xquote)
-  -- set('shellslash', cui.slash)
-  -- set('completeslash', cui.completeslash)
 end -- }}}
 
 ---Create new scratch buffer
@@ -252,34 +244,44 @@ end
 ---@param has_g? boolean Has plefix "g"
 ---@param is_visual? boolean Visual mode or not
 M.search_star = function(has_g, is_visual)
-  local word ---@type string
+  local pattern = ''
+  local res_key = ''
+
   if is_visual then
-    local pos = { fn.getpos('v'), fn.getpos('.') }
-    if pos[1][3] > pos[2][3] then
-      pos = { pos[2], pos[1] }
+    local pos = fn.getpos('.')
+    local vpos = fn.getpos('v')
+    local mode = fn.mode()
+    local chunks = fn.getregion(pos, vpos, { type = mode })
+    local esc_chunks = vim
+      .iter(chunks)
+      :map(function(v)
+        return fn.escape(v, [[/\]])
+      end)
+      :totable()
+    pattern = [[\V]] .. table.concat(esc_chunks, [[\n]])
+    res_key = [[<Esc>]]
+  else
+    local word = fn.expand('<cword>')
+    if word == '' then
+      return ''
     end
-    local lines = api.nvim_buf_get_lines(0, pos[1][2] - 1, pos[2][2], false)
-    if #lines == 1 then
-      word = lines[1]:sub(pos[1][3], pos[2][3])
+
+    if has_g then
+      pattern = [[\V]] .. fn.escape(word, [[/\]])
     else
-      return M.feedkey('*', 'n')
-    end
-    vim.defer_fn(function()
-      M.feedkey('<Esc>', 'x')
-    end, 0)
-  else
-    word = fn.expand('<cword>')
-    if not has_g then
-      word = string.format([[\<%s\>]], word)
+      pattern = [[\V\<]] .. fn.escape(word, [[/\]]) .. [[\>]]
     end
   end
+
+  fn.setreg('/', pattern)
+  fn.histadd('/', pattern)
+  vim.v.searchforward = 1
+  vim.opt.hlsearch = true
   if vim.v.count > 0 then
-    return M.feedkey('*', 'n')
-  else
-    fn.setreg('/', word)
-    fn.histadd('search', word)
-    return api.nvim_set_option_value('hlsearch', true, { scope = 'global' })
+    res_key = res_key .. vim.v.count .. 'n'
   end
+
+  return vim.api.nvim_replace_termcodes(res_key, true, false, true)
 end
 
 --- This code was copied from snacks.debug.
@@ -327,25 +329,6 @@ function M.inspect(trace, max_lines, ...) -- {{{2
 
   return info, ret
 end -- }}}2
-
---[[
----Check the existence of the executable file
----@param cmd string[]
----@return boolean
-M.executable = function(cmd)
-  local ok, job = pcall(vim.system, cmd, { text = true })
-
-  if ok then
-    vim.defer_fn(function()
-      if not job:is_closing() then
-        job:kill(9)
-      end
-    end, 1000)
-  end
-
-  return ok
-end
---]]
 
 local function _option_notify(name, value)
   local suffix = value and 'Enable ' or 'Disable '

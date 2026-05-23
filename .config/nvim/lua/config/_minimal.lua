@@ -37,7 +37,7 @@ o.previewheight = 8
 ---@desc Normal {{{2
 vim.g.mapleader = ';'
 
-keymap.set('n', '<Laeder><Leader>w', helper.toggleWrap)
+keymap.set('n', '<Laeder><Leader>w', helper.toggle_wrap)
 keymap.set('n', '<C-z>', '<NOP>')
 keymap.set('n', ',', function()
   if o.hlsearch then
@@ -83,9 +83,25 @@ keymap.set('x', '<', '<gv')
 keymap.set('x', '>', '>gv')
 --}}}2
 
+keymap.set('n', '<C-c>', '<Cmd>cquit<CR>', { noremap = true, silent = true })
+
 ---@desc Commands
 ---@desc "Z <filepath>" zoxide query
 api.nvim_create_user_command('Z', 'execute "lcd " . system("zoxide query " . <q-args>)', { nargs = 1 })
 
----@desc COLORSCHEME {{{1
--- vim.cmd('colorscheme habamax')
+local disable_bg = {
+  'Normal',
+  'NormalNC',
+  'NormalFloat',
+  'LineNr',
+  'SignColumn',
+  'StatusLine',
+  'FloatBorder',
+  'FloatTitle',
+  'FloatFooter',
+}
+vim.iter(disable_bg):each(function(hlgroup)
+  vim.api.nvim_set_hl(0, hlgroup, { bg = 'NONE' })
+end)
+
+

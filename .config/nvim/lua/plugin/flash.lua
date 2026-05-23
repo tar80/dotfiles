@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------
 
 local beacon = (function()
-  local ok, beacon = pcall(require, 'tartar.beacon')
+  local ok, beacon = pcall(require, 'tartar.lib.beacon')
   if ok then
     return beacon.new('FlashLabel', 80, 30, 15)
   end
@@ -154,10 +154,10 @@ return {
       '<leader>f',
       mode = { 'n', 'x', 'o' },
       function()
-        local pre = vim.api.nvim_win_get_cursor(0)
+        local before = vim.api.nvim_win_get_cursor(0)
         require('flash').jump({ search = { mode = 'exact' } })
-        local post = vim.api.nvim_win_get_cursor(0)
-        if beacon and not vim.deep_equal(pre, post) then
+        local after = vim.api.nvim_win_get_cursor(0)
+        if beacon and not vim.deep_equal(before, after) then
           beacon:around_cursor(0)
         end
       end,
@@ -166,7 +166,7 @@ return {
     {
       '<Space>',
       mode = { 'x', 'o' },
-      function( )
+      function()
         local node = vim.treesitter.get_node()
         if node and type(node) == 'userdata' then
           require('flash').treesitter()
@@ -186,14 +186,16 @@ return {
       'R',
       mode = { 'o' },
       function()
-        if type(vim.treesitter.get_node()) == 'userdata' then
-          vim.cmd.normal('ma')
-          require('flash').treesitter_search({ remote_op = { restore = true, motion = false } })
-          vim.defer_fn(function()
-            vim.cmd.normal('g`a')
-            vim.api.nvim_buf_del_mark(0, 'a')
-          end, 0)
+        if not vim.treesitter.get_node() then
+          vim.notify('Treesitter disable this buffer.', vim.log.levels.INFO, { title = 'flash.nvim' })
+          return
         end
+        local winid = vim.api.nvim_get_current_win()
+        local cursor = vim.api.nvim_win_get_cursor(winid)
+        require('flash').treesitter_search({ remote_op = { restore = true, motion = false } })
+        vim.schedule(function()
+          vim.api.nvim_win_set_cursor(winid, cursor)
+        end)
       end,
       desc = 'Remote selection Flash',
     },

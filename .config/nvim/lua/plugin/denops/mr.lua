@@ -6,6 +6,7 @@ return {
     vim.api.nvim_set_var('mr_mrr_disabled', true)
     -- vim.api.nvim_set_var('mr_mru_disabled', true)
     vim.api.nvim_set_var('mr_mrw_disabled', true)
+    vim.api.nvim_set_var('mr#mru#filename', os.getenv('XDG_CACHE_HOME') .. '/mr/mru')
     vim.api.nvim_set_var('mr#threshold', 200)
     vim.cmd(
       "let g:mr#mru#predicates=[{filename -> filename !~? '^c|\\\\\\|\\/doc\\/\\|\\/dist\\/\\|\\/\\.git\\/\\|\\.cache'}]"

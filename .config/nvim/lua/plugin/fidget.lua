@@ -1,17 +1,17 @@
 -- workspace=$XDG_DATA_HOME\nvim-data\lazy\fidget.nvim\lua
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1
 
-local function open_fidget_history()
+local function open_fidget_history() -- {{{2
   local fidget_notif = require('fidget.notification')
   local history = fidget_notif.get_history()
 
   if #history == 0 then
-    vim.api.nvim_echo({ { 'Fidget: No history available' } }, false, {})
+    vim.api.nvim_echo({ { '[Fidget] No history available' } }, false, {})
     return
   end
 
   local buf = vim.api.nvim_create_buf(false, true)
-  local ns_id = vim.api.nvim_create_namespace('RcFidgetHistory')
+  local ns_id = vim.api.nvim_create_namespace('rcFidgetHistory')
 
   local FIXED_INDENT_COL = 2
 
@@ -95,6 +95,7 @@ local function open_fidget_history()
     style = 'minimal',
     border = 'rounded',
     focusable = true,
+    zindex = 300,
   })
 
   for _, h in ipairs(highlights) do
@@ -105,13 +106,60 @@ local function open_fidget_history()
   vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
   vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
   vim.api.nvim_set_option_value('winblend', 5, { win = win })
-  vim.api.nvim_set_option_value('cursorline', true, { win = win })
+  -- vim.api.nvim_set_option_value('cursorline', true, { win = win })
   vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = buf, silent = true, nowait = true })
 
   if #all_lines > 0 then
     vim.api.nvim_win_set_cursor(win, { #all_lines, 0 })
   end
-end
+end -- }}}
+local function override_prints(opts) -- {{{2
+  local _fast_event_wrap = require('tartar.lib.common').fast_event_wrap
+  local notify = require('fidget.notification').notify
+  local unpack_dots = function(...)
+    local t = { n = select('#', ...), ... }
+    return unpack(t, 1, t.n)
+  end
+  if opts.vim_notify then
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.notify = function(...)
+      local msg, level, notify_opts = unpack_dots(...)
+      if not msg then
+        return
+      end
+      level = level or 1
+      notify_opts = notify_opts or {}
+      local title = notify_opts.title and ('[%s] '):format(notify_opts.title) or ''
+      msg = ('%s%s'):format(title, msg)
+      _fast_event_wrap(notify)(msg, level, {
+        key = 'vim.notify',
+        group = 'default',
+        annote = '',
+      })
+    end
+  end
+  if opts.vim_print then
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.print = function(...)
+      local info, msg = require('helper').inspect(true, 2000, ...)
+      _fast_event_wrap(notify)(msg, vim.log.levels.INFO, {
+        key = 'vim.print',
+        group = 'messages',
+        annote = info,
+      })
+    end
+  end
+  if opts.print then
+    print = function(...)
+      local _, msg = require('helper').inspect(false, 2000, ...)
+      _fast_event_wrap(notify)(msg, vim.log.levels.INFO, {
+        key = 'print',
+        group = 'messages',
+        annote = '󰢱'
+      })
+    end
+  end
+end -- }}}
 
 return {
   'j-hui/fidget.nvim',
@@ -120,33 +168,16 @@ return {
     vim.api.nvim_create_autocmd('UIEnter', {
       once = true,
       callback = function()
-        local msg = ('Startup time: %s'):format(require('lazy').stats().startuptime)
-        require('fidget').notify(msg, vim.log.levels.INFO, { annote = '󱎫' })
+        local msg = tostring(require('lazy').stats().startuptime)
+        require('fidget').notify(msg, vim.log.levels.INFO, { annote = 'Startup Time 󱎫' })
       end,
     })
     vim.keymap.set('n', 'ms', open_fidget_history, { desc = 'Fidget History' })
-    local _fast_event_wrap = require('tartar.helper').fast_event_wrap
-    local fidget = require('fidget')
-    local notify = fidget.notification.notify
-    ---@diagnostic disable-next-line: duplicate-set-field
-    vim.print = function(...)
-      local info, lines = require('helper').inspect(false, 2000, ...)
-      local msg = ('[%s]\n%s'):format(info, lines)
-      _fast_event_wrap(notify)(msg, vim.log.levels.INFO, {
-        key = 'vim.print',
-        group = 'messages',
-        annote = '',
-      })
-    end
-    print = function(...)
-      local info, lines = require('helper').inspect(true, 2000, ...)
-      local msg = ('[%s]\n%s'):format(info, lines)
-      _fast_event_wrap(notify)(msg, vim.log.levels.INFO, {
-        key = 'print',
-        group = 'messages',
-        annote = '󰢱',
-      })
-    end
+    override_prints({
+      print = false,
+      vim_print = true,
+      vim_notify = true,
+    })
   end,
   opts = {
     progress = {
@@ -202,7 +233,7 @@ return {
       poll_rate = 10,
       filter = vim.log.levels.DEBUG,
       history_size = 128,
-      override_vim_notify = true,
+      override_vim_notify = false,
       configs = {
         default = {
           name = 'Notifications',
@@ -254,8 +285,8 @@ return {
       window = {
         normal_hl = 'Comment',
         winblend = 100,
-        border = require('tartar.icon.ui').border.bot_dash,
-        zindex = 45,
+        -- border = require('tartar.icon.ui').border.bot_dash,
+        zindex = 500,
         max_width = 200,
         max_height = 0,
         x_padding = 1,

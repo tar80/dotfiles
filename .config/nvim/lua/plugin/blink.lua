@@ -1,12 +1,13 @@
-local helper = require('tartar.helper')
+local common = require('tartar.lib.common')
 local bubble = require('tartar.icon.ui').frame.bubble
 local slant = require('tartar.icon.ui').frame.slant_u
 local kind_icons = require('tartar.icon.kind')
-local quote_border = helper.generate_quotation('PmenuMatch')
-local bubble_border = helper.generate_decorative_line(slant.left, slant.right, 'BlinkCmpSignatureHelpBorder')
+local quote_border = common.generate_quotation('PmenuMatch')
+local bubble_border = common.generate_decorative_line(slant.left, slant.right, 'BlinkCmpSignatureHelpBorder')
 
 return {
   'saghen/blink.cmp',
+  branch = 'v1',
   -- version = '1.*',
   dependencies = {
     'fang2hou/blink-copilot',
@@ -18,9 +19,6 @@ return {
     },
   },
   opts = {
-    -- enabled = function()
-    --   return not vim.g['skkeleton#enabled']
-    -- end,
     keymap = {
       preset = 'none',
       ['<C-e>'] = { 'cancel', 'fallback' },

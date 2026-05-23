@@ -1,7 +1,7 @@
 -- vim:textwidth=0:foldmethod=marker:foldlevel=1:
 
-local light_theme = 'light'
-local dark_theme = 'mallow'
+local light_theme = 'vivid'
+local dark_theme = 'chill'
 local transparent = {}
 
 ---Transparent background
@@ -17,7 +17,7 @@ end
 
 ---@type string, string, string
 local global_bg = (function()
-  local time = require('helper').adapt_time(7, 18)
+  local time = require('helper').adapt_time(6, 18)
   return time == 'daytime' and 'light' or 'dark'
 end)()
 
@@ -56,22 +56,24 @@ return {
         return tr and {}
           or {
             light = {
-              -- ['@comment.documentation'] = { style = 'dim,italic' },
+              -- ['@type.luadoc'] = { style = 'dim,italic' },
               FidgetInfo = { fg = colors.olive, style = 'blink' },
               MsgArea = { bg = '#F2F0EE' },
               CursorLineHold = { bg = '#FDE3DD' },
-              BlinkCmpSignatureHelpActiveParameter = { sp = colors.high_cyan, style = 'underline,bold'},
+              SelectorLabel = { bg = colors.high_cyan, fg = colors.bg, style = 'bold' },
+              BlinkCmpSignatureHelpActiveParameter = { sp = colors.high_cyan, style = 'underline,bold' },
               BlinkCmpSignatureHelp = { bg = colors.selection },
               BlinkCmpSignatureHelpBorder = { fg = colors.selection },
               -- BlinkCmpDoc = { fg = colors.fg, bg = colors.shade_blue },
               -- BlinkCmpDocSeparator = { fg = colors.gray, bg = colors.shade_blue },
             },
             dark = {
-              -- ['@comment.documentation'] = { style = 'dim,italic' },
+              -- ['@type.luadoc'] = { style = 'dim,italic' },
               FidgetInfo = { fg = colors.olive, style = 'blink' },
               MsgArea = { bg = '#102025' },
               CursorLineHold = { bg = '#3E1D31' },
-              BlinkCmpSignatureHelpActiveParameter = { sp = colors.high_cyan, style = 'underline,bold'},
+              SelectorLabel = { bg = colors.high_cyan, fg = colors.bg, style = 'bold' },
+              BlinkCmpSignatureHelpActiveParameter = { sp = colors.high_cyan, style = 'underline,bold' },
               BlinkCmpSignatureHelp = { bg = colors.shade_cyan },
               BlinkCmpSignatureHelpBorder = { fg = colors.shade_cyan },
               -- BlinkCmpDoc = { fg = colors.fg, bg = colors.shade_blue },
@@ -80,6 +82,7 @@ return {
           }
       end,
       integrations = {
+        editor = true,
         quicker = true,
         nightly = true,
         lazy = true,

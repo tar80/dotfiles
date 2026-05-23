@@ -14,6 +14,8 @@ return {
       vim.api.nvim_set_var('denops#server#deno_args', { '-q', '--no-lock', '--unstable-kv', '-A' })
       vim.api.nvim_set_var('denops#server#retry_threshold', 1)
       vim.api.nvim_set_var('denops#server#reconnect_threshold', 1)
+
+      vim.api.nvim_set_var('kensaku_dictionary_cache',os.getenv('XDG_CACHE_HOME')..'kensaku.vim/migemo-compact-dict')
     end,
   },
 }

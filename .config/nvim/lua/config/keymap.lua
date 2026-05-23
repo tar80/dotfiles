@@ -2,7 +2,6 @@
 --------------------------------------------------------------------------------
 local api = vim.api
 local fn = vim.fn
-local o = vim.o
 local keymap = vim.keymap
 local helper = require('helper')
 
@@ -34,6 +33,15 @@ local function ppcust_load() -- {{{2
   vim.notify('PPcust CA ' .. fn.expand('%:t'), 3)
 end
 
+local function refine_search(char) -- {{{2
+  if vim.v.hlsearch == 0 then
+    vim.go.hlsearch = true
+  end
+  local keys = (char == 'n') and { 'n', 'N' } or { 'N', 'n' }
+  local res_key = vim.v.searchforward == 1 and keys[1] or keys[2]
+  return api.nvim_replace_termcodes(res_key .. 'zv', true, false, true)
+end
+
 ---@desc Keymaps {{{1
 keymap.set({ 'n' }, 'gx', function()
   for _, url in ipairs(require('vim.ui')._get_urls()) do
@@ -54,11 +62,11 @@ keymap.set('n', '<C-F9>', ppcust_load)
 keymap.set('n', '<C-z>', '<Nop>')
 keymap.set('n', 'dD', '"_dd')
 keymap.set('n', '<C-[>', function()
-  if o.hlsearch then
+  if vim.go.hlsearch then
     api.nvim_set_option_value('hlsearch', false, { scope = 'global' })
   end
 end)
-keymap.set('n', '<C-m>', 'i<C-M><ESC>')
+keymap.set('n', '<C-m>', 'i<C-M><Esc>')
 keymap.set('n', '/', function()
   api.nvim_set_option_value('hlsearch', true, { scope = 'global' })
   return '/'
@@ -67,8 +75,12 @@ keymap.set('n', '?', function()
   api.nvim_set_option_value('hlsearch', true, { scope = 'global' })
   return '?'
 end, { noremap = true, expr = true })
-keymap.set('n', 'n', "'Nn'[v:searchforward].'zv'", { noremap = true, expr = true, silent = true })
-keymap.set('n', 'N', "'nN'[v:searchforward].'zv'", { noremap = true, expr = true, silent = true })
+vim.keymap.set('n', 'n', function()
+  return refine_search('n')
+end, { noremap = true, expr = true, silent = true })
+vim.keymap.set('n', 'N', function()
+  return refine_search('N')
+end, { noremap = true, expr = true, silent = true })
 keymap.set('c', '<CR>', function()
   local cmdtype = fn.getcmdtype()
   if cmdtype == '/' or cmdtype == '?' then
@@ -93,23 +105,26 @@ end)
 ---Close nofile|qf|preview window
 keymap.set('n', '<Space>z', function()
   if api.nvim_get_option_value('buftype', { buf = 0 }) == 'nofile' then
-    return api.nvim_buf_delete(0, { unload = true })
+    vim.cmd.bunload()
+    return
   end
   if vim.wo.diff then
-    vim.wo.diff = false
-    -- vim.cmd.bdelete(altnr)
+    vim.cmd.diffoff()
   end
   local altnr = fn.bufnr('#')
   if altnr ~= -1 and api.nvim_get_option_value('buftype', { buf = altnr }) == 'nofile' then
     vim.cmd.bdelete(altnr)
     return
-    -- return api.nvim_buf_delete(altnr, {unload = true})
   end
-  local qfnr = fn.getqflist({ qfbufnr = 0 }).qfbufnr
-  if qfnr ~= 0 then
-    return api.nvim_buf_delete(qfnr, {})
+  if fn.getloclist(0, { winid = 0 }).winid ~= 0 then
+    vim.cmd.lclose()
+    return
   end
-  helper.feedkey('<C-w><C-z>', 'n')
+  if fn.getqflist({ winid = 0 }).winid ~= 0 then
+    vim.cmd.cclose()
+    return
+  end
+  vim.cmd.pclose()
 end)
 
 ---Insert/Command mode {{{2
@@ -157,13 +172,3 @@ keymap.set('v', '<C-Delete>', '"*ygvd')
 ---do not release after range indentation process
 keymap.set('x', '<', '<gv')
 keymap.set('x', '>', '>gv')
----search for cursor under string without moving cursor
--- keymap.set('n', '*', function()
---   helper.search_star()
--- end, { expr = true })
--- keymap.set('n', 'g*', function()
---   helper.search_star(true)
--- end, { expr = true })
--- keymap.set('x', '*', function()
---   helper.search_star(false, true)
--- end, { expr = true })

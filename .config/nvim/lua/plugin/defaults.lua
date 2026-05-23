@@ -3,14 +3,6 @@
 return { -- {{{2
   ---@library
   { 'nvim-lua/plenary.nvim', lazy = true },
-  { -- {{{3 mini.icons
-    'echasnovski/mini.icons',
-    lazy = true,
-    config = function()
-      require('mini.icons').setup()
-      require('mini.icons').mock_nvim_web_devicons()
-    end,
-  }, -- }}}
   { -- {{{3 tartar
     'tar80/tartar.nvim',
     priority = 1000,
@@ -22,6 +14,8 @@ return { -- {{{2
         once = true,
         callback = function()
           local sauce = require('tartar.sauce')
+          sauce.auto_diff({ enable_maps = true, label_hl = 'SelectorLabel' })
+
           local abbrev = sauce.abbrev()
           abbrev.tbl = { --- {{{5
             ia = {
@@ -48,7 +42,8 @@ return { -- {{{2
               cs = { { [[execute '50vsplit'g:repo.'/dotfiles/.config/nvim/.cheatsheet'<CR>]] } },
               ca = { { 'CodeCompanionActions<CR>', 'CodeCompanion add function description and annotations<CR>' } },
               cc = { { 'CodeCompanion #{buffer}', 'CodeCompanion' } },
-              dd = { { 'diffthis<Bar>wincmd<Space>p<Bar>diffthis<Bar>wincmd<Space>p<CR>' } },
+              -- dd = { { 'diffthis<Bar>wincmd<Space>p<Bar>diffthis<Bar>wincmd<Space>p<CR>' } },
+              dd = { { [[aboveleft AutoDiff]] }, true },
               dof = { { 'syntax<Space>enable<Bar>diffoff!<CR>' } },
               dor = {
                 {
@@ -118,7 +113,7 @@ return { -- {{{2
         end,
       })
     end, -- }}}4
-    config = false,
+    config = true,
   }, -- }}}3
   { 'folke/ts-comments.nvim', event = 'VeryLazy', opts = {} },
 
@@ -127,6 +122,29 @@ return { -- {{{2
     dev = true,
     dependencies = { 'mini.icons', 'tartar.nvim' },
     event = 'UIEnter',
+    keys = {
+      { 'gb', '<Plug>(staba-pick)', mode = { 'n' } },
+      { '<Space>1', '<Plug>(staba-cleanup)', mode = { 'n' } },
+      { '<Space>q', '<Plug>(staba-delete-select)', mode = { 'n' } },
+      {
+        '<Space>qq',
+        function()
+          local key
+          if vim.bo.filetype == 'codecompanion' then
+            key = '<C-c>'
+          else
+            key = '<Plug>(staba-delete-current)'
+          end
+          return key
+        end,
+        mode = { 'n' },
+        expr = true,
+        remap = true,
+      },
+      { 'm', '<Plug>(staba-mark-operator)', mode = { 'n' } },
+      { 'mm', '<Plug>(staba-mark-toggle)', mode = { 'n' } },
+      { 'mD', '<Plug>(staba-mark-delete-all)', mode = { 'n' } },
+    },
     config = function()
       local function git_branch() -- {{{
         local repo = vim.uv.cwd():gsub('^(.+[/\\])', '')
@@ -150,26 +168,12 @@ return { -- {{{2
           or ('%s %s:%%#Special#%s '):format(require('tartar.icon.symbol').git.branch, repo, details)
       end -- }}}
 
-      vim.keymap.set('n', 'gb', '<Plug>(staba-pick)')
-      vim.keymap.set('n', '<Space>1', '<Plug>(staba-cleanup)')
-      vim.keymap.set('n', '<Space>q', '<Plug>(staba-delete-select)')
-      vim.keymap.set('n', '<Space>qq', function()
-        local key
-        if vim.bo.filetype == 'codecompanion' then
-          key = '<C-c>'
-        else
-          key = '<Plug>(staba-delete-current)'
-        end
-        return key
-      end, { expr = true, remap = true })
-      vim.keymap.set('n', 'm', '<Plug>(staba-mark-operator)', {})
-      vim.keymap.set('n', 'mm', '<Plug>(staba-mark-toggle)', {})
-      vim.keymap.set('n', 'mD', '<Plug>(staba-mark-delete-all)', {})
       require('staba').setup({
         -- no_name = '[no name]',
         adjust_icon = true,
         enable_fade = true,
         enable_underline = true,
+        enable_overline = false,
         enable_sign_marks = true,
         enable_statuscolumn = true,
         enable_statusline = true,
@@ -178,15 +182,15 @@ return { -- {{{2
         nav_keys = 'basdfghjklzxcvnmqweertuiopy',
         ignore_filetypes = {
           fade = { 'trouble' },
-          statuscolumn = { 'qf', 'help', 'terminal', 'undotree' },
+          statuscolumn = { 'qf', 'help', 'terminal', 'undotree', 'diff', 'GigTerminal' },
           statusline = { 'terminal', 'trouble', 'snacks_layout_box' },
           tabline = { 'qf', 'snacks_picker_list' },
         },
         -- nav_key = '',
         statusline = {
           active = {
-            left = { 'search_count', 'snacks_profiler' },
-            middle = {},
+            left = { '%S', 'snacks_profiler' },
+            middle = { 'search_count' },
             -- middle = { 'search_count' },
             right = { '%<', 'diagnostics', ' ', 'copilot', git_branch, 'filetype', 'encoding', ' ', 'position' },
           },
@@ -200,7 +204,7 @@ return { -- {{{2
   { -- {{{3 rereope
     'tar80/rereope.nvim',
     dev = true,
-    opts = { map_cyclic_register_keys = {} },
+    opts = { map_cyclic_register_keys = {}, map_append_keys = true },
     keys = {
       {
         '_',

@@ -63,7 +63,7 @@ local dap = {
   'mfussenegger/nvim-dap',
   lazy = true,
   init = function()
-    local with_unique_name = require('tartar.util').name_formatter(UNIQUE_NAME)
+    local with_unique_name = require('tartar.lib.common').name_formatter(UNIQUE_NAME)
     keymap.set('n', '<C-F5>', function()
       local dap = require('dap')
       vim.b.maplocalleader = '\\'

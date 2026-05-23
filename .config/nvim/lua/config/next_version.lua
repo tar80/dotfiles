@@ -4,17 +4,20 @@ end
 
 -- local augroup = vim.api.nvim_create_augroup('config/next_version', {})
 
-
 local success, ui = pcall(require, 'vim._core.ui2')
 
 if success and ui.enable then
   ui.enable({
     enable = true,
     msg = {
-      ---@type 'cmd'|'msg'
-      target = 'cmd',
+      ---@type 'cmd'|'msg'|'pager'
+      targets = 'cmd',
       timeout = 4000,
+      height = 0.5
     },
+    pager = {
+      height = 0.5
+    }
   })
 else
   vim.notify('failed to load vim._core.ui2', 4, {})

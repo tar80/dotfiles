@@ -10,7 +10,6 @@ local WORKSPACE_LIBRARIES = {
 local TEST_LIBRARIES = {
   lazy_plugins .. '/plenary.nvim/lua/plenary/busted.lua',
   lazy_plugins .. '/plenary.nvim/lua/luassert',
-  -- lazy_plugins .. '/plenary.nvim/lua/plenary/_meta/_luassert.lua',
 }
 
 local rgx_ph = vim.regex('^' .. PLACE_HOLDER)
@@ -64,7 +63,7 @@ return {
       diagnostics = {
         enable = true,
         disable = { 'unused-function' },
-        globals = { 'vim', 'nyagos', 'describe', 'before_each', 'after_each', 'setup', 'teardown', 'it', 'Snacks' },
+        globals = { 'vim', 'nyagos', 'assert', 'describe', 'before_each', 'after_each', 'setup', 'teardown', 'it', 'Snacks', },
       },
       format = { enable = false },
       hint = {

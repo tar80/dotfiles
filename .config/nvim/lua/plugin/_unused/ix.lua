@@ -23,11 +23,10 @@ return {
     local attach_insert_mode = ix.get_default_config().attach.insert_mode
     local lsp_kind = require('cmp-kit.kit.LSP').CompletionItemKind
     local tartar_kind = require('tartar.icon.kind')
-    local helper = require('helper')
-    local feedkey = helper.feedkey
+    local feedkey = require('tartar.map').feedkey
 
     ---@desc Vsnip
-    vim.g.vsnip_snippet_dir = helper.xdg_path('config', '.vsnip')
+    vim.g.vsnip_snippet_dir = require('helper').xdg_path('config', '.vsnip')
 
     ix.setup({
       expand_snippet = function(snippet_body)

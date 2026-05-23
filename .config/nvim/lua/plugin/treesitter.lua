@@ -10,16 +10,16 @@ return {
     opts = {
       install_dir = vim.fn.stdpath('data') .. '/site',
     },
-    config = function()
-      vim.g._ts_force_sync_parsing = false
-
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function()
-          vim.treesitter.start()
-        end,
-      })
-    end,
+    -- config = function()
+    --   vim.g._ts_force_sync_parsing = true
+    --
+    --   vim.api.nvim_create_autocmd('FileType', {
+    --     pattern = filetypes,
+    --     callback = function()
+    --       vim.treesitter.start()
+    --     end,
+    --   })
+    -- end,
   },
   {
     'nvim-treesitter/nvim-treesitter-textobjects',

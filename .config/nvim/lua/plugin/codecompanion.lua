@@ -8,6 +8,7 @@ local use_model = {
 
 return {
   'olimorris/codecompanion.nvim',
+  version = '19.9.0',
   dependencies = {
     'plenary.nvim',
     'nvim-treesitter',

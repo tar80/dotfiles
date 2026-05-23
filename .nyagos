@@ -1,7 +1,7 @@
 ---@desc constants
 local THEME_NAME = 'Catppuccin Macchiato'
 local REPO_ROOT = 'D:/Repos'
-local DEV_ROOT = 'D:/Dev'
+local DEV_ROOT = 'X:/'
 local MY_REPO = string.format('%s/tar80', REPO_ROOT)
 local SCOOP_ROOT = nyagos.env.scoop:gsub('\\', '/')
 
